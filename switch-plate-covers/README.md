@@ -35,18 +35,23 @@ switch-plate-covers/
 Every body is exported individually in all three formats, **centered at the origin with its
 bottom face at Z=0** (print-bed-ready orientation — thin dimension vertical, large face down).
 
+> **Exports are currently stale.** The project owner reduced the front-edge fillet from 3.75mm
+> to 1.5mm on two of the shelled bodies and added a new 1.5mm fillet to the flat Decora body
+> after these files were generated (see below). The files in `step/`, `3mf/`, `stl/` do not yet
+> reflect that change — re-export before using them.
+
 ## Bodies
 
 | File base name | Description |
 |---|---|
 | `double-gang-toggle-plate` | Flat double-gang toggle plate, no shell/fillet |
-| `double-gang-toggle-plate-shelled` | Same, with a cosmetic 1mm back shell + 3.75mm front fillet |
-| `decora-single-gang-plate` | Flat single-gang Decora/GFCI-style plate, correct screw holes |
-| `decora-single-gang-plate-shelled` | Same, with 1mm back shell + 3.75mm front fillet |
-| `decora-single-gang-plate-shelled-original-no-holes` | Superseded early draft, kept for reference — see Known Issues |
+| `double-gang-toggle-plate-shelled` | Same, with a cosmetic 1mm back shell + **1.5mm front fillet** (reduced from 3.75mm) |
+| `decora-single-gang-plate` | Flat single-gang Decora/GFCI-style plate, correct screw holes, **1.5mm front fillet** (newly added) |
+| `decora-single-gang-plate-shelled` | Same, with 1mm back shell + **1.5mm front fillet** (reduced from 3.75mm) |
+| `decora-single-gang-plate-shelled-original-no-holes` | Superseded early draft, kept for reference — still carries the original 3.75mm fillet, untouched — see Known Issues |
 
 Full dimensions for every feature (opening size, screw spacing, corner radii, pocket/shell/fillet
-values) are in [`parameters.md`](parameters.md).
+values) are in [`parameters.md`](parameters.md), including the fillet revision history.
 
 ## Design sources
 

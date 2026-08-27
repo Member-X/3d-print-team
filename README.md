@@ -109,6 +109,43 @@ rest of the pipeline in order, looping back to an earlier stage if a later one f
 `etsy-market-research` runs independently, upstream of all of this, whenever you want ideas rather
 than to build something already decided on.
 
+## How to talk to the team
+
+You don't need special syntax — just describe what you want in plain language, and name an agent
+directly if you want to skip straight to it instead of going through the director.
+
+**Starting a new design (goes through the director):**
+> "I want to design a wall-mounted holder for cat toy wands."
+
+The director will ask a few qualifying questions (does it mate with real hardware? printer/material
+preferences? new design or a revision?) before delegating onward.
+
+**Checking on something already in progress:**
+> "What's the status of the noise maker project?"
+
+**Asking for product ideas, bypassing the build pipeline entirely:**
+> "Have the Etsy market researcher look into pet urns and memorial items."
+
+> "Kick off the market research agent — no specific niche, just see what's trending."
+
+**Going straight to visual concept iteration** (skips the director if you already know you want to
+start from a reference image rather than a full spec):
+> "Use the concept designer to make a variation of this propagation station listing photo — same
+> idea, but a wave shape instead of a ring, and holding two tubes instead of one."
+
+Then, after it generates a first pass: *"Move the tubes closer together and make the base wider"* —
+keep giving feedback in plain language each round until you approve one.
+
+**Going straight to a specific pipeline stage**, when you don't need the whole flow (e.g. re-testing
+after a manual tweak, or asking for one more test without redoing the spec):
+> "Have the tester re-check the clearance on the current propagation station model."
+
+> "Ask the reviewer to do a final render of the noise maker now that it's done."
+
+If you're not sure who should handle something, just describe the goal to the director — it's built
+to figure out the right agent and ask you anything it's missing, rather than you needing to know
+the team roster by heart.
+
 ## Project folders
 
 Each product gets its own top-level folder (e.g. `noise-maker/`, `cat-toy-holder/`) containing:

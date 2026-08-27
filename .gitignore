@@ -1,0 +1,8 @@
+# Python virtual environments (each mcp-servers/* has its own, ~100MB+ each)
+.venv/
+__pycache__/
+*.pyc
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db

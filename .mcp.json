@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "blender": {
+      "command": "blender-mcp",
+      "args": []
+    },
+    "openai-vision": {
+      "command": "H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-vision\\.venv\\Scripts\\python.exe",
+      "args": ["H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-vision\\server.py"]
+    },
+    "openai-web-research": {
+      "command": "H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-web-research\\.venv\\Scripts\\python.exe",
+      "args": ["H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-web-research\\server.py"]
+    },
+    "openai-image-gen": {
+      "command": "H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-image-gen\\.venv\\Scripts\\python.exe",
+      "args": ["H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-image-gen\\server.py"]
+    }
+  }
+}

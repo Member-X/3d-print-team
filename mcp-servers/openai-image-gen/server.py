@@ -14,6 +14,7 @@ servers works here too).
 """
 
 import base64
+import mimetypes
 import os
 from pathlib import Path
 
@@ -23,6 +24,26 @@ from openai import OpenAI
 mcp = MCPServer("openai-image-gen")
 
 DEFAULT_MODEL = "gpt-image-2"
+
+# The OpenAI SDK needs an explicit, correct MIME type per image — a raw file
+# handle alone gets sent as generic application/octet-stream and is rejected.
+# Only jpeg/png/webp are accepted by the images API; make sure the guess is
+# right regardless of what the local Python install's mimetypes db knows.
+_MIME_OVERRIDES = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".webp": "image/webp",
+}
+
+
+def _image_file_tuple(path: str):
+    """Return (filename, bytes, mimetype) for the OpenAI SDK's image upload param."""
+    p = Path(path)
+    mime = _MIME_OVERRIDES.get(p.suffix.lower())
+    if mime is None:
+        mime = mimetypes.guess_type(str(p))[0] or "image/png"
+    return (p.name, p.read_bytes(), mime)
 
 
 def _get_client() -> OpenAI:
@@ -103,16 +124,12 @@ def generate_variation(
     if missing:
         return f"Error: reference image(s) not found: {missing}"
 
-    files = [open(p, "rb") for p in reference_image_paths]
-    try:
-        result = client.images.edit(
-            model=model,
-            image=files,
-            prompt=prompt,
-        )
-    finally:
-        for f in files:
-            f.close()
+    images = [_image_file_tuple(p) for p in reference_image_paths]
+    result = client.images.edit(
+        model=model,
+        image=images,
+        prompt=prompt,
+    )
 
     saved_path = _save_b64_image(result.data[0].b64_json, output_path)
     return f"Saved to {saved_path}"

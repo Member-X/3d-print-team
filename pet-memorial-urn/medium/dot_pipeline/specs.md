@@ -264,6 +264,11 @@ base/collar) maintained. The proportion is slightly less pronounced than Large's
 
 ### 4.5 Body profile — control points, tangencies, and the volume hand-calc
 
+> **v2 (2026-09-10): the body profile below P3 is revised for a rounder silhouette — see §4.7.
+> The control-point table and volume hand-calc in this §4.5 are the v1 values, retained for
+> derivation history; §4.7 supersedes them for the base→belly→shoulder region. P3, P4, and
+> everything at or above the collar are unchanged.**
+
 Same construction method as Large: a tangent-constrained spline (or chained cubic Bezier) through
 these control points, revolved 360° — not a straight-frustum stack. Belly position held at
 **~45% of total external height**, matching both Large's own concept-derived proportion and this
@@ -337,6 +342,109 @@ resting stance, gives a large stable 88mm-diameter bed-adhesion footprint, and i
 orientation consistent with every segment above being self-supporting or only mildly at-risk at
 one small, disclosed zone — same reasoning, independently re-verified at this size's own actual
 geometry, not assumed to carry over from Large.
+
+> **v2 (2026-09-10):** the rounder profile (§4.7) does not change the print orientation or its
+> reasoning. Local overhang in the faired lower body rises to ~30° from vertical (was ~16° as a
+> single chord) — still comfortably self-supporting. One new minor first-print watch item: the
+> underside of the 6mm rounded foot (§4.7), whose bottom ~1.8mm sits below 45° right on the build
+> plate — routine for a rounded base edge. The neck-to-collar blend zone is unchanged.
+
+### 4.7 v2 body-profile revision (2026-09-10) — rounder "thrown-ceramic" silhouette
+
+**Scope / authority.** The requester approved a rounder body silhouette from the mockup
+`medium/concept/v2-rounder-body.png` ("that is perfect") and directed the same aesthetic onto
+Small. This revision reshapes the body profile **below P3 only**. It does **not** change: overall
+height (131mm), belly max OD (120.4mm), base OD (88mm), nominal wall (3.2mm), the 4mm floor, or
+anything at or above P3 — neck ID 72mm, neck OD 78.4mm, the P3→P4 external tangent blend, the
+whole 12mm collar band. P3's position (z_ext 119 / z_int 115), radius (internal 36.0 / external
+39.2) and tangent condition (dr/dz→0) are held **identical to v1**.
+
+**What changes, and why:**
+
+1. **Belly (P1) — from "broad plateau" to a gentle broad swell.** Same radius (internal 57.0 /
+   external 60.2) and same height (z_int 55 / z_ext 59, 45.0%), but the tangent-handle magnitudes
+   at P1 are lengthened so curvature is spread smoothly through the apex instead of flat-top-then-
+   corner. Target profile radius-of-curvature at the belly apex ≈ 30mm — a full rounded swell on a
+   60.2mm-radius body, not a point and not a plateau.
+2. **Shoulder inflection (old P2) — smoothed into one continuous curve.** v1's P2 sat 3.7mm
+   *inside* the P1–P3 chord (internal r 47.0 at z_int 73) with a tangent break — the visible
+   "kink" the requester called out. v2 keeps a P2 control point only as a **gentle witness**:
+   internal r 47.5 / external 50.7 at **z_int 80 (z_ext 84)** — just **0.75mm inside** the P1–P3
+   chord, tangent set to the chord direction (dr/dz = −0.35, ≈19° from vertical), matched on both
+   sides for **G2 (curvature-continuous) blending**. The single unavoidable belly-convex →
+   neck-concave inflection is now one gentle, distributed curvature reversal near P2, not a
+   localized corner. Sub-millimetre off a fair curve over a 60mm span — reads as one flowing
+   profile, no visible segment boundary.
+3. **Sharp bottom edge — eased into a rounded foot.** New **external foot fillet radius 6.0mm**,
+   tangent to the flat underside and to the near-vertical foot wall (external r 44.0). New
+   **internal floor-to-wall fillet radius 4.0mm** (replaces v1's unspecified "no sharp internal
+   corner" round). Base OD (max external diameter) is still 88mm, now first reached at the top of
+   the fillet arc (z_ext ≈ 6). **Disclosed consequence:** the flat ground-contact ring shrinks to
+   ≈76mm diameter (2×38mm). Contact-width : height = 0.58 — still a stable footprint for a
+   decorative vessel carrying a ~1.5–2 kg bagged payload; flagged, not hidden.
+
+**v2 control-point table** (internal radii drive the cavity; external = internal + 3.2mm nominal
+wall on the body, + 7mm at the foot and + 8mm collar reinforcement above P3, exactly as v1):
+
+| Point | Z_int | Z_ext | Internal r | External r | Tangent condition (profile plane) | Handle magnitudes |
+|---|---|---|---|---|---|---|
+| P0 — floor/base | 0 | 4 | 37.0 | 44.0 | dr/dz = 0 (wall vertical); foot fillets R6 ext / R4 int | up-handle ≈ 12mm |
+| P1 — belly swell apex | 55 | 59 | 57.0 | 60.2 | dr/dz = 0 (wall vertical at max OD) | down-handle ≈ 22mm, up-handle ≈ 13mm — long, for a broad swell |
+| P2 — soft shoulder (witness only) | 80 | 84 | 47.5 | 50.7 | dr/dz = −0.35 (≈19° from vertical), matched both sides, G2 | ≈ 12mm toward P1, ≈ 16mm toward P3 |
+| P3 — neck-taper-end | 115 | 119 | 36.0 | 39.2 | dr/dz → 0 — **UNCHANGED from v1** | ≈ 16mm toward P2; collar side straight |
+| P4 — rim / top of collar | 127 | 131 | 36.0 | 44.0 | Constant r internally — **UNCHANGED from v1** | — |
+
+Coder: build the outer profile as a single G2-continuous chained-cubic spline P0→P1→P2→P3, then
+verify the curvature comb shows (a) no cusp, (b) exactly one gentle curvature-sign change (near
+P2), (c) no localized curvature spike at P1 or P2. Offset inward 3.2mm for the inner profile,
+holding the 4mm floor, the 7mm foot and the 8mm collar reinforcement exactly as v1.
+
+**Volume hand-calc** (frustum chords through the v2 control points + fairing/fillet corrections;
+same method and same caveats as §4.5's hand-calc):
+
+| Segment | Internal r1→r2 | Height | Volume |
+|---|---|---|---|
+| P0 → P1 | 37.0 → 57.0 | 55mm | 387.45 cm³ |
+| P1 → P2 | 57.0 → 47.5 | 25mm | 215.01 cm³ |
+| P2 → P3 | 47.5 → 36.0 | 35mm | 192.87 cm³ |
+| P3 → P4 (collar) | 36.0 constant | 12mm | 48.86 cm³ |
+| **Chord sum** | | 127mm | **844.19 cm³** |
+| + lower-body fairing (long P0→P1 handles bulge outside the chord) | | | +2.6 cm³ |
+| − upper-body fairing (net concave pull into the neck) | | | −2.0 cm³ |
+| − internal foot fillet R4 | | | −0.8 cm³ |
+| **v2 faired hand-calc** | | | **≈844 cm³** (fairing-uncertainty range ≈840–850) |
+
+```
+≈844 cm³ vs 819.4 cm³ target → +3.0%. Band ±5% = 778.4–860.3 cm³ → INSIDE (≈16 cm³ below ceiling).
+Back-check: 844 ÷ 16.3871 ≈ 51.5 in³.
+Heights: 55 + 25 + 35 + 12 = 127mm internal ✓; + 4mm floor = 131mm external ✓.
+```
+
+**Why v2 gains ~+26 cm³ over v1's 818.3 hand-calc, and why that is expected rather than a
+defect:** v1 held its volume target partly *by* pinching the shoulder 3.7mm inside the P1–P3
+chord. That concave pinch cannot be smoothed away without giving the volume back — a properly
+faired P1→P3 span is inherently ~30 cm³ fuller than v1's pinched two-segment path. The gentle
+0.75mm P2 witness recovers most of the difference; a pure fair curve with no witness at all would
+land ≈+40 cm³ (~858 cm³ — still just inside the band, but with almost no ceiling margin).
+
+**Applying this size's known hand-calc → CAD bias** (v1: hand-calc 818.3, as-built CAD 805.3–806.5,
+≈ −1.6%): expected v2 CAD ≈ **830–840 cm³** (+1.3% to +2.5% vs target) — comfortably in band. The
+bias may be weaker for v2, since the concave waist that produced it in v1 is far gentler now; the
+CAD could land closer to the 844 hand-calc.
+
+**Coder flag-back trigger and the pre-agreed fix.** If the real CAD mass-properties for the v2
+body land **above 860.3 cm³**: do not accept it and do not move any fixed constraint — instead
+deepen the P2 witness from internal r 47.5 to **internal r 46.0** at z_int 80 (still G2, still
+<2.5mm off the chord, still one continuous curve). That removes ≈13 cm³ (hand-calc → ≈831). If it
+lands **below 778.4 cm³** (not expected — v2 adds volume): lengthen the P1 down-handle toward P0
+and/or the P1 up-handle to fatten the swell.
+
+**Lid / plug / neck-fit-test — unaffected, no rebuild (reasoning confirmed).**
+`urn-lid-medium.*`, the alignment plug, and `neck-fit-test-medium.*` depend only on geometry at
+or above P3 — the neck ID (72mm), the bore the plug enters, the collar OD 88mm / ID 72mm / 12mm
+band, the P3→P4 external blend, and the 87.700mm brim seat. v2 changes nothing at or above P3
+(P3's position, radius and tangent are byte-identical to v1). The Coder rebuilds **only**
+`urn-body-medium.{step,3mf,stl}`.
 
 ---
 
@@ -649,3 +757,4 @@ Named here explicitly, per instruction, rather than left implicit:
 |---|---|---|
 | v1 (this document) | Initial spec for the Medium size (25–50 lb, sized to 50 lb / 819.4 cm³ target). Derived a fresh nominal wall thickness (3.2mm, via a material/cavity-ratio proportionality argument, not a linear scale of Large's 4mm), a fresh floor thickness (4.0mm, holding Large's 1.25× floor:wall ratio), fresh competitor research into medium-tier pet urn opening diameters (real manufacturer listings, 66.7–88.9mm across 35–110 in³ capacities, revealing opening diameter does not scale linearly with capacity), a neck ID decision (72mm, a compromise below the researched 79–89mm cluster for this capacity tier, chosen to protect the base/collar visual hierarchy), a base-widening resolution (foot thickened to 7mm to reach exact parity with the 88mm collar OD), a full body control-point table and volume hand-calc (≈818.3 cm³ vs. 819.4 cm³ target, −0.13%), a fresh overhang/orientation re-check, a full lid re-derivation (brim/dome/plateau via ratio-preservation from Large's own proportions, plug clearance held at Large's 0.5mm as a reasoned fixed-practical-minimum rather than scaled down further, plug wall matched to the new nominal body wall), a re-derived collar reinforcement wall (8mm, holding Large's 2.5× nominal-wall ratio rather than its absolute 10mm), and a cost estimate (≈$6.30–7.90 combined, vs. Large's ≈$12.0–14.9). | First planning pass for the Medium size, per the Director's task framing: reuse the Large product line's settled v7 visual identity as-is, but independently re-derive every dimension that is genuinely scale-dependent (wall thickness, plug clearance/wall, neck opening, overhang angles, collar reinforcement) rather than naively shrinking Large's absolute numbers. |
 | v1.1 (lid-only fix, 2026-09-09) | **Brim OD reduced from 88.000mm to 87.700mm on the lid only** (collar OD unchanged at 88.000mm on the body) — a -0.3mm negative allowance on the zero-clearance flush brim-to-collar fit the Tester's RE-TEST pass measured exactly at 88.000mm = 88.000mm (see `tests.md` §7, `verdict.md` item 2). Two `LidProfile` sketch points moved (radius 44.000mm → 43.850mm); no other lid dimension changed. Re-verified: single solid body (unchanged face/edge/vertex counts 13/11/11), plug OD/wall/depth/cap and dome base/height/plateau all bit-identical pre/post edit, lid material volume 124.1914 cm³ → 123.862 cm³ (Fusion mass-properties; a −0.329 cm³ / −0.27% delta consistent with only a thinner brim ring), brim OD measured 87.700mm on the live B-rep (exact cylindrical face radius 43.850mm) and independently confirmed on the exported STEP/3MF/STL. Pre-fix `urn-lid-medium.step/.3mf/.stl` archived to `medium/archive/pre-brim-tolerance-fix/` before overwriting. | Applied per the same precedent already established on Large's own identical flush-brim/collar fit (see Large's `parameters.md`), per explicit confirmed instruction from the requester, to avoid a proud/binding lid edge from normal FDM dimensional variance on an as-designed zero-margin mating diameter. |
+| v2 (body-profile revision, 2026-09-10) | **Body profile below P3 reshaped for a rounder "thrown-ceramic" silhouette — full spec in §4.7**, per the requester-approved mockup `medium/concept/v2-rounder-body.png` ("that is perfect"), with the same aesthetic directed onto Small. Belly (P1) tangent-handle magnitudes lengthened so the apex reads as a broad swell, not a plateau (same radius, same height). Shoulder inflection de-kinked: v1's P2 (internal r 47.0 at z_int 73, 3.7mm inside the P1–P3 chord, with a tangent break) replaced by a gentle G2 witness (internal r 47.5 at z_int 80, 0.75mm inside the chord, curvature-continuous). New external foot fillet R6 + internal floor-to-wall fillet R4 ease the former sharp base edge (flat ground-contact ring now ≈76mm dia; base OD still 88mm at the top of the fillet). Held fixed: 131mm height, 120.4mm belly OD, 88mm base OD, 3.2mm wall, 4mm floor, and every dimension at or above P3 (neck ID/OD, P3→P4 blend, whole collar band). v2 faired volume hand-calc **≈844 cm³** (+3.0% vs the 819.4 cm³ target, inside the ±5% band 778.4–860.3); expected CAD ≈830–840 cm³ given this size's −1.6% hand-calc→CAD history. Lid, alignment plug and `neck-fit-test-medium` are unaffected (they depend only on P3-and-above geometry, which is byte-identical to v1) — the Coder rebuilds **only** `urn-body-medium.{step,3mf,stl}`. | Requester approved the rounder aesthetic via visual mockup and asked to apply it to Small and Medium (not Large). Smoothing v1's concave shoulder pinch inherently gives back ~26 cm³ of cavity volume; a gentle retained witness plus this size's known hand-calc→CAD bias keep the built cavity inside the tolerance band **without moving any fixed constraint**, per the revision brief's explicit instruction. Pre-existing v1.1 lid files and the v1 body are untouched; `parameters.md` stays at as-built v1 figures until the Coder rebuilds and the Tester re-verifies. |

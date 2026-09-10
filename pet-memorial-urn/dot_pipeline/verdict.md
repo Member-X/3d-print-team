@@ -691,3 +691,442 @@ refinement, which is a healthier reason for a change but doesn't reduce the veri
 each time. The recovery/verification discipline continues to hold up (every check above passed
 independently), but the recurring need to touch this exact region is worth the director's own
 attention as a pattern, separate from any single pass's CAD verdict.
+
+
+---
+---
+
+# RE-TEST PASS 7 -- VERDICT (v5 major revision: neck/collar widened, height trimmed, lid resized)
+
+## Overall: PASS. Every independently-checked dimension matches spec, at a level of precision (often to the third decimal place) that reflects genuinely careful execution, not a rushed rework. This needs a full fresh Reviewer pass, not a lightweight addendum -- more clearly so than either of the last two rounds.
+
+## The four things you specifically asked about
+
+1. **Cavity volume: PASS.** Independently measured **1579.31 cm3** vs. the Coder's claimed
+   1580.25 cm3 (0.06% difference, well within this project's normal mesh-resolution tolerance
+   band). This confirms the tangent-scaling tuning judgment call worked -- the spec's own
+   hand-calculated estimate (~1578.6 cm3), the Coder's CAD measurement, and my independent
+   measurement now all agree to within about 0.1% of each other and to within 0.08% of the
+   ~1579 cm3 target. Given the first-pass construction reportedly came in 6.25% off before this
+   tuning, landing this close on the second pass is a genuinely good outcome, not a lucky
+   near-miss.
+
+2. **Neck-to-collar overhang angle: PASS, with a striking independent cross-check worth
+   highlighting.** I measured the peak angle at **45.56 deg from vertical**, close to the
+   Coder's own independently-measured 45.81 deg -- both comfortably under the spec's ~47.25 deg
+   estimate. More notably: my measured value is **numerically identical to 10 significant
+   figures** to what I independently measured on the pre-widening (v4) collar blend two rounds
+   ago. This isn't a coincidence -- it's a direct, unprompted confirmation of the spec's own
+   geometric-invariance argument (same radius delta, same blend span, same construction method
+   -> same curve shape, just relocated). When a spec's reasoning about *why* a number should
+   come out a certain way is confirmed to floating-point precision by independent measurement,
+   that's about as strong a validation as this kind of check can produce.
+
+3. **Lid handle-hole integrity post-scale: PASS, verified directly.** This got specific scrutiny
+   given the non-uniform scale operation. Swept the full depth of the loop and confirmed a
+   genuine, unobstructed through-hole from y=-4mm to +4mm, measuring exactly 22mm x 24mm at
+   center -- identical to every prior verified figure for this feature across the entire
+   project. The scale operation (applied before the handle features, per the Coder's report)
+   left this hard constraint completely intact.
+
+4. **Overall: ready for the Reviewer.** See routing recommendation below for why I think this
+   specifically needs a full pass rather than a targeted addendum.
+
+## Everything else checked, in brief (full detail in tests.md R41-R52)
+
+- **Manifold/watertight, all three parts, both STL and 3MF**: PASS, zero non-manifold edges
+  found anywhere.
+- **Belly apex unchanged by the height trim**: PASS, confirmed at the same absolute height
+  (z~69mm, r=76.964mm) it held before this revision -- the trim genuinely came entirely from the
+  belly-to-shoulder segment as claimed, not from the belly itself.
+- **Shoulder, neck, collar dimensions**: PASS, matched to the third decimal place at every
+  checked height. Notably, the shoulder's internal radius (42.42mm) -- flagged in the spec as an
+  `ESTIMATED` figure needing Coder re-verification -- came back independently confirmed at
+  exactly 42.420mm. **This should be upgraded from `ESTIMATED` to `VERIFIED` in the next spec
+  pass**, closing out a flagged risk rather than leaving it open unnecessarily.
+- **Base and collar-band cleanliness**: PASS, no pockets, no residual features from the resize.
+- **Lid brim/dome dimensions**: PASS (122mm brim exact; dome base ~97.3mm vs. ~97.2mm target,
+  close enough).
+- **`neck-fit-test` article**: PASS -- correctly rebuilt at 80/88/100mm, single valid manifold
+  solid, self-supporting in its print orientation. This is the file the requester will actually
+  print, and it now represents the *right* geometry, closing the gap the spec explicitly warned
+  about (an unrebuilt test article would have validated the wrong opening size).
+- **File-location/path-bug check**: PASS -- searched the whole repo for stray copies, found
+  none outside the canonical locations (aside from the already-accounted-for magnet-pocket
+  archive from an earlier revision).
+- **Base-vs-collar visual proportion**: PASS -- confirmed via a live Fusion screenshot, not just
+  the dimensional check. The belly is unambiguously the widest, most visually dominant feature;
+  base and collar read as comparably narrow at each end. Not top-heavy.
+
+## Recommendation on Reviewer routing -- yes, and a full pass, not an addendum, more clearly than either of the last two rounds
+
+Both of the last two rounds got a recommendation of "route to Reviewer, but a lightweight/
+targeted addendum is enough" -- I don't think that's the right call this time. Three reasons,
+in order of weight:
+
+1. **This revision directly rewrites the spec's single most-discussed named risk.** The 58mm
+   neck ID has been flagged as an untested `ESTIMATED` assumption since v1 of this spec, and
+   this revision changes it based on real, new market/competitor research (not just an internal
+   geometry tweak) -- the requester's own risk tolerance and business reasoning for choosing
+   80mm over 100mm (to avoid exceeding the 98mm base OD) is exactly the kind of judgment call
+   the Reviewer's business-fit charter exists to sign off on, not something that should close
+   out purely on a Tester's dimensional-accuracy verification.
+2. **The lid was substantially reworked, not just rescaled by a trivial amount.** Brim OD grew
+   22%, dome base OD grew 21% -- this is described in the spec itself as "a real geometry rework
+   of the lid, shown with the same rigor as the original lid derivation, not a cosmetic pass."
+   A change the spec's own authors treat as equivalent in rigor to the original derivation
+   deserves the same level of review the original derivation got, not a follow-up note.
+3. **Scale of change, plainly:** this touches height, neck ID/OD, collar ID/OD, and both of the
+   lid's two headline dimensions (brim and dome) in the same pass. That's a materially larger
+   footprint than either of the last two rounds (a subtractive feature removal, and a capacity
+   number update on an otherwise-unchanged silhouette). The director's own framing -- "the
+   biggest single change to this file since the original build" -- already reaches the same
+   conclusion I would independently: this is closer in scope to a second original build than to
+   an incremental fix, and should get reviewed with the same rigor as one.
+
+**What I don't think this needs: another CAD/geometry round-trip.** The geometry itself is
+sound and precisely executed, independently confirmed above at every checked point. What's
+needed is the Reviewer's business-fit judgment on the new opening size, the resized lid's
+concept-fidelity (does a 122mm brim / 97mm dome still read as proportioned to the concept
+image the way the 100mm/80mm version did?), and a fresh full pass through `review.md` reflecting
+this revision -- not just a stale-sentence correction like the last two rounds needed.
+
+## Process note (5th instance, now including a deliberate change alongside the incidents)
+
+This is the fifth manual/direct-edit-related event on this file (a stray, cleanly-removed
+fillet-feature pair this time, caught before the real work started -- not itself a defect that
+made it into a shipped export). The pattern of this file needing frequent, careful
+re-verification continues to hold up well under scrutiny each time, but the frequency itself
+remains worth the director's attention as a standing risk independent of any single pass's
+verdict.
+
+
+---
+---
+
+# RE-TEST PASS 8 -- VERDICT (v6 candidate: lid-underside alignment plug)
+
+## Overall: PASS on all 5 requested checks. The new internal-bridge finding is real and deserves a more honest risk framing than "cosmetic non-issue," but I agree it shouldn't block. Ready for the Reviewer.
+
+## The 5 requested checks
+
+1. **Collision-free against body's neck taper: PASS.** Plug tip lands at body-Z=143.5mm
+   (10.0mm plug depth measured independently, subtracted from the body's independently
+   re-confirmed 153.5mm rim height), body's internal taper begins at P3=138.5mm (also
+   independently re-confirmed on the untouched body file) -- **5.0mm margin, confirmed using
+   real measured geometry of both parts, not nominal-vs-nominal arithmetic.**
+2. **Wall thickness: PASS.** Measured 39.750mm outer / 35.750mm inner at 10 sampled heights
+   through the full 10mm depth -- constant 4.000mm wall, true cylinders, no taper. Exact match.
+3. **Single valid manifold solid: PASS.** Watertight, 1 component, Euler=0, zero non-manifold
+   edges -- confirmed independently on both the STL and the actual slicer-ready 3MF.
+4. **Handle unaffected: PASS, verified directly.** Swept the loop's full depth and confirmed a
+   genuine open through-hole from y=-4 to +4mm, exactly 22mm x 24mm -- bit-for-bit identical to
+   every handle measurement across this entire project. Not trusted from "unaffected," directly
+   re-measured.
+5. **Clearance: PASS.** 80.000mm body bore ID minus 79.500mm plug OD = 0.500mm diametral,
+   computed from real independently-measured geometry of both parts, matching the claimed
+   figure exactly.
+
+## The bridging risk -- my independent assessment, since this is the most important new thing to get right
+
+**I don't think "cosmetic non-issue needing only a watch-item note" is the complete picture,
+though I agree with the underlying conclusion not to block on it.** Two things need separating:
+how likely is this bridge to print imperfectly, and does that actually matter.
+
+**Likelihood: real, not negligible.** A 71.5mm-diameter unsupported horizontal span, even with
+genuinely favorable full-perimeter anchoring, is well past the range FDM printing is commonly
+considered reliably capable of bridging cleanly (community/vendor guidance for confident
+bridging tops out around 40-50mm even for PLA). This lid is PETG, which bridges worse than PLA,
+not better. I'd expect a visible sag and likely some stringing on the first bridging layer(s)
+under default settings -- this is a real print-quality risk, not a low-probability edge case
+being overcautiously flagged.
+
+**Consequence: genuinely low, but for a more precise reason than "it's inside the neck."** The
+surface is fully enclosed, permanently invisible once assembled, and structurally disconnected
+from the plug's fit-critical OD and from any visible finish surface. A bad bridge here has no
+functional or cosmetic consequence I can identify. **This is what actually justifies not
+blocking -- not that the print will likely turn out fine, but that it doesn't matter if it
+doesn't.** I'd recommend the design record reflect that more precisely than "cosmetic
+non-issue," since the current framing risks someone reading it later as "this will print clean"
+rather than "this may not print clean, and that's fine."
+
+**One concrete, previously-unflagged risk worth adding to whatever slicer guidance ships with
+this design:** if the operator's slicer has supports set to "everywhere" rather than "touching
+build plate only," it may generate support material *inside* this sealed 71.5mm void that can
+never be removed once the ceiling prints over it. Not a functional failure (inert, hidden,
+disconnected from the urn's usable cavity), but a genuinely non-obvious gotcha specific to this
+new feature -- worth a one-line callout: confirm "support on build plate only" before slicing
+the lid.
+
+**On whether a tilt angle would help both overhang zones at once: no.** The internal bridge
+would benefit from tilting (a flat disc tilted past ~45 deg behaves like a self-supporting slope
+instead of a flat span), but the outer support annulus is a discontinuous vertical step, not a
+sloped surface -- tilting doesn't convert a literal step into a self-supporting slope. Worse,
+any tilt large enough to meaningfully help the internal bridge would reintroduce overhang risk
+on the dome and handle, both deliberately oriented flat-down specifically to avoid that. Trading
+a hidden, consequence-free risk for a new risk on visible geometry is the wrong trade.
+**Recommendation: keep the flat, plug-tip-down orientation, and handle the internal bridge with
+slicer settings scoped to that one layer band** (max cooling, reduced speed there) rather than a
+whole-part tilt.
+
+## Test-coupon recommendation -- agree, and would state the direction of risk more specifically
+
+I agree a clearance-test coupon should be printed before committing to the full lid. I'd add:
+FDM bores systematically tend to print slightly undersized and bosses/plugs slightly oversized
+relative to nominal CAD dimensions -- meaning the realized clearance is more likely to end up
+**tighter than the nominal 0.5mm, not looser**. Combined with the already-named PETG/PLA
+shrinkage-mismatch risk, this is a directionally-biased risk worth stating plainly, not a
+generic "always test your fits" disclaimer.
+
+## Is this ready for the Reviewer?
+
+**Yes.** All 5 geometric checks pass with exact or near-exact matches to spec, the plug is a
+clean, well-executed, purely-additive change that doesn't touch anything else in the design
+(body, neck-fit-test, and every other lid feature independently confirmed unaffected), and the
+one new risk worth real scrutiny (the internal bridge) has a low-consequence profile once
+properly assessed, with concrete, actionable mitigations available (slicer settings, a
+test coupon) rather than requiring a geometry change. This is a smaller-scope, single-feature
+addition compared to the last two rounds (the v5 major revision and the magnet removal both got
+"needs a fuller Reviewer look" recommendations from me) -- a targeted Reviewer look at this one
+addition, informed by the bridging-risk framing above, should be sufficient here; I don't think
+this needs the same full-pass treatment the v5 revision did, since it's additive-only and
+doesn't touch any previously-reviewed dimension, proportion, or business-fit judgment.
+
+
+---
+---
+
+# RE-TEST PASS 9 — VERDICT (v7 candidate: plug tip capped, handle removed, brim thickened+shrunk, dome apex flattened)
+
+## Overall: PASS, ready for the Reviewer — with one real finding that should go back to the Planner/dome-owner as a decision, not be silently absorbed, and one pre-existing open item restated so it doesn't get lost in a five-change round.
+
+This was treated as a full independent build, per the instruction that a five-change, 23-feature
+rebuild deserves the same rigor as an original pass, not a spot-check. Full detail for every check
+below is in `tests.md`, RE-TEST PASS 9 (R61–R71). This verdict summarizes the two items that
+actually needed judgment calls, not just measurement.
+
+## 1. Is the 2-connected-components finding a defect? No — confirmed correct three independent ways, including at the native CAD B-rep level, which is stronger evidence than a mesh-only check could ever provide.
+
+This was named as the single most important thing to get right this round, so it got the most
+scrutiny. Three independent checks, at two different levels of the data:
+
+1. **Mesh-level** (`trimesh.split` on the actual shipped STL): 2 watertight components — an outer
+   shell (+216.35 cm³) and the sealed plug void's own boundary (−24.07 cm³, magnitude matching a
+   35.75mm-radius, 6mm-tall cylinder almost exactly). The negative sign is the expected signature
+   of a correctly-oriented internal-void shell, not a topology error.
+2. **B-rep level** (direct parsing of `step/urn-lid.step`'s actual entities, not the exported
+   mesh): the file uses `BREP_WITH_VOIDS` — a STEP entity that exists *specifically* to represent
+   one solid with internal void shells — with exactly one outer `CLOSED_SHELL` (10 faces) and one
+   inner void `CLOSED_SHELL` (3 faces), totaling the claimed 13 faces exactly. `MANIFOLD_SOLID_BREP`
+   (the entity used for a solid with no voids) does not appear at all. **The CAD kernel's own
+   native classification of this part is "one solid with a sealed internal void" — this is not an
+   interpretation being applied after the fact, it is what the authoritative CAD data says.**
+3. **Differential check**: the archived pre-cap lid (`archive/pre-v7-handle-removal/urn-lid.stl`)
+   shows exactly **1** component, because its void was open to the exterior through the
+   then-unsealed tip. Capping the tip is precisely the change that should flip a design from
+   1 component to 2 — and that is exactly what happened, confirmed on the real before/after files
+   rather than reasoned about in the abstract.
+
+**Judgment: this is settled. 2 components is correct, expected, and unavoidable for a correctly
+sealed cavity in this geometry. I would not accept a re-litigation of this point without new
+evidence — the STEP-level check in particular (finding `BREP_WITH_VOIDS` directly, rather than
+inferring solid count from a mesh) is about as strong a confirmation as this kind of question
+ever gets.**
+
+## 2. Is the dome plateau-vs-height tradeoff math reasoned correctly? Partially — the arithmetic for the built geometry is right, but the framing of the tradeoff as unavoidable is wrong, and that's worth taking seriously.
+
+Pulled the actual sphere and torus parameters directly from the STEP file (not from the spec's own
+worked hand-calc, specifically to avoid checking the Coder's arithmetic against itself). Two
+separate questions, two separate answers:
+
+**(a) Given the sphere that was actually used (R=41.6667mm — confirmed via STEP, and confirmed to
+be exactly the base-radius/point-apex-height sphere from *before* the flattening request, not a
+value freshly derived for the new target set), does hitting a full 29mm height force the plateau
+down to ~17.7mm? Yes.** Verified directly: this sphere's own raw (pre-blend) radius at the
+29mm-height point is 9.07mm, and the built, blended plateau (8.85mm, confirmed two independent
+ways) is a small, expected step down from that raw figure — this is a legitimate, correctly-
+executed consequence of that specific sphere.
+
+**(b) Is it true, as the spec states, that ~22mm plateau and ~29mm height are "not simultaneously
+achievable on one spherical cap" at the 80mm base? No.** Solved the actual 3-target system (base
+radius, height, plateau radius) for the sphere radius that satisfies all three exactly: **R =
+41.4849mm — 0.44% smaller than the sphere that was used** — hits 80mm base, 29mm height, AND
+22mm plateau simultaneously and exactly (verified by direct substitution, not just algebra). No
+non-spherical geometry is needed. **The real constraint that was actually operating here was
+"keep the existing, previously-verified sphere rather than re-derive and re-verify a new one" —
+which is a legitimate, defensible engineering choice (lower risk, less re-verification work) —
+but it is not the same claim as "the targets are mathematically incompatible," and the spec
+currently states the latter.**
+
+**My judgment on why this matters enough to raise rather than let ride:** the resulting shift is
+not trivial — 17.7mm vs. the intended ~22mm is a real, visible ~20% shrink on a proportion that
+was itself sized against an approved concept-comparison image specifically to "read as roughly a
+quarter of the dome's base width." The actual built part now reads closer to a fifth. The fix, if
+one is wanted, is cheap (a <0.2mm sphere-radius change, not a redesign) — which is exactly why I
+don't think this should be silently absorbed as "the math made us do it." **Recommendation: this
+goes back to whoever owns the dome-apex sizing decision as a named choice — keep the current
+17.7mm plateau (fine, if made knowingly, since the built geometry is valid and self-supporting
+either way) or take the cheap re-derivation to land closer to the originally-approved ~22mm
+proportion. Either is acceptable; presenting it as if there were no choice is not.**
+
+**This does not block this pass.** The built geometry is dimensionally accurate to what it claims
+to be, smooth (max 12.6° facet angle, no real creases), and fully self-supporting (zero
+locally-increasing-radius steps across a 390-point sweep). This is a documentation/reasoning
+correction, not a geometry defect — but it's the kind of correction that changes what the next
+person up the chain should be allowed to decide, so it's being surfaced explicitly rather than
+filed away as a passed check.
+
+## 3. Handle removal — clean, confirmed two independent ways
+
+Component-count reconciliation (2 = 2, fully explained by the sealed-void finding above, no
+unexplained third island) and face-inventory reconciliation (13 `ADVANCED_FACE` entities in the
+STEP file = 6 planes + 3 cylinders + 1 sphere + 3 toruses, exactly matching the claim with nothing
+left over). Both are structural, not visual, checks — a leftover handle/plinth fragment would show
+up as an extra component or extra faces in either method, and neither shows one. **No orphaned
+geometry. This reversal of a documented "hard constraint" is exactly what the requester directly
+and explicitly confirmed (per `parameters.md` §6, `specs.md` §7), and is not being treated as a
+defect** — only its clean execution was in scope for this check, and that's confirmed.
+
+## 4. Fit and clearance — checked against the real mating part, not just re-stated
+
+Re-measured the body's bore directly on the actual (untouched) body STL rather than reusing prior
+numbers, since a fit claim always needs re-verification against the real current state of *both*
+mating parts, not just the one that changed. Bore ID: 80.000mm constant through the full 15mm
+engagement zone, still true post-v7 (as expected, body file unmodified — confirmed by timestamp
+*and* by re-measuring its own independent dimensions, not timestamp alone). Clearance: 0.500mm
+exact, collision margin: 5.0mm exact, both recomputed from two freshly-measured real numbers.
+**No hardware/mounting-clearance class of issue applies here** — this design has no fasteners or
+embedded hardware of any kind (magnets were removed project-wide back in v3); the plug/bore pair
+is the design's only mating interface, and it passes.
+
+## 5. Named risks correctly carried forward, one new low-severity documentation gap found
+
+- The 71.5mm internal ceiling bridge and its trapped-support slicer gotcha: unchanged by capping,
+  as the spec itself claims — independently re-confirmed (the void's floor is now solid, not open,
+  exactly as of Z=4mm).
+- The zero-tolerance-margin brim/collar flush edge (§5.1.1/§10 edge case 4): re-confirmed present
+  and correctly disclosed; the 0.3mm negative allowance is a reasonable, transparently-reasoned
+  mitigation, not an issue in itself.
+- **New this pass: the spec's "10mm flat brim ring" corroborating check does not describe the
+  actual built geometry** — the real transition from brim wall to dome is a smooth compound
+  fillet with no flat annular shelf, confirmed both by a fine-resolution mesh sweep and by finding
+  two additional fillet toruses in the STEP file exactly where a flat ring was claimed to be. This
+  is cosmetic/documentation-only (the smooth transition is arguably *better* for print quality
+  than a flat shelf with two sharp corners would have been) but should be corrected in the record
+  so it isn't cited later as a verified visual proportion that isn't actually there.
+
+## 6. Material — no change needed, one forward-looking caution recorded
+
+PETG remains correct for the lid; nothing about v7 weakens that reasoning (if anything, the plug
+and the now-sole-grip brim edge are both slightly more mechanically relevant than before, and both
+favor PETG's toughness over PLA's brittleness). No action needed now — recorded for future editors
+in case PLA is ever considered for cost/finish-matching reasons.
+
+## 7. One usability observation, not a structural failure: removing the handle plausibly increases *how often* a drop happens, even though it doesn't change *how well the lid survives* one
+
+The lid itself (solid PETG dome/brim, no thin unsupported features outside the already-disclosed
+hidden internal bridge) should survive an ordinary drop without cracking. But gripping a smooth
+dome by hand is less secure than a purpose-built handle loop, especially for an object handled
+during an emotionally difficult task. This is a legitimate business-fit consideration for the
+Reviewer, not something this pass is positioned to resolve (the handle removal was an explicit,
+confirmed, user-directed override of the concept's own hard-constraint framing) — flagging it so
+it's visible at the review stage rather than only living in a structural test log where it might
+be read as "no concern at all."
+
+## 8. Blocking-dimension check — restated, not newly resolved
+
+The neck-opening-vs-real-remains-bag `ESTIMATED` risk (specs.md §4.4) is **unaffected by this
+lid-only round and remains open** — no physical bag test has occurred. This is not new information,
+but it is restated here deliberately: a five-change lid revision is exactly the kind of round where
+a long-standing, unrelated open item could quietly stop being mentioned. It is not stopping this
+lid pass, but it should not be treated as resolved by this pass's success either.
+
+## Is this ready for the Reviewer?
+
+**Yes**, with two items to carry forward explicitly in the handoff rather than leave implicit:
+(1) the dome plateau/height framing correction (§2 above) needs a decision from whoever owns
+apex-sizing — this is a "which of two valid options do we want" question, not a defect to fix
+silently, and (2) the pre-existing neck-opening/real-bag risk remains open regardless of how well
+this round went. Every other headline number in the v7 revision — plug geometry, brim dimensions,
+total/combined heights, material volume, the 2-components question, and handle removal — checks
+out cleanly against independent, from-first-principles verification, including direct native
+B-rep inspection where mesh-only checking would have left more room for doubt.
+
+
+---
+---
+
+# RE-TEST PASS 10 — VERDICT (scoped re-check: dome sphere radius fix, 17.70mm → 21.73mm plateau)
+
+## Overall: PASS. The R65 finding from the prior pass is resolved correctly, not just patched. Ready for the Reviewer.
+
+Scoped re-check, not a full re-run, per the request — this verdict covers only the dome-apex fix
+and the invariants a sphere-radius change could plausibly disturb. Full detail in `tests.md`,
+RE-TEST PASS 10 (R72–R75).
+
+## 1. Did the Coder actually fix the thing I flagged, correctly?
+
+Yes. The new sphere radius (**R=41.4849370254mm**, confirmed directly from `SPHERICAL_SURFACE` #16
+in the re-exported STEP file) is bit-identical to the value I derived independently last pass by
+solving the 3-target system (80mm base / 29mm height / 22mm plateau) — not an approximation of it,
+the exact figure. Re-deriving from the new sphere placement independently: base radius at the
+brim-top boundary (global Z=20) comes out to exactly 40.000mm, and the sphere's own raw,
+unblended radius at the target height (global Z=49) comes out to exactly 11.000mm — meaning the
+corrected sphere genuinely threads through the original target with no shortfall at the raw-curve
+level. Any remaining gap from a literal 22.00mm is attributable entirely to the (now much smaller,
+1mm vs. the prior 2mm) fillet, not to the sphere.
+
+## 2. Is the tangency claim genuine, or just asserted?
+
+**Independently verified genuine**, using a method that doesn't depend on trusting the Coder's own
+sweep: a 390-point radius-monotonicity sweep (zero locally-increasing steps) and a facet-crease
+detection pass (`face_adjacency_angles`) across the entire dome, which found a maximum facet angle
+of 12.72° — statistically identical to the 12.64° found at the same unrelated location (the
+brim-to-dome fillet) last pass, and nowhere close to the ~20-30°+ range that would indicate a real
+kink. **No sharp transition appears anywhere near the new dome-to-plateau blend.** This is the
+same crease-detection method I used last pass to independently confirm the *other* blend was
+genuine, applied now to this one — consistent standard, consistent result.
+
+## 3. Is 21.73mm (not exactly 22mm) the right tradeoff, given the spec's explicit tangency requirement? Yes — and it costs less than the framing suggests.
+
+My independent read, since this was specifically asked for rather than a pass/fail:
+
+- **The 22mm figure was never a tight target.** The spec itself calls it "an aesthetic judgment
+  call... roughly a quarter of the dome's base width" and tags it `ESTIMATED` — there was no
+  stated tolerance to weigh against tangency.
+- **The tangency requirement is the one with real, named, print-quality teeth.** The spec spells
+  out the alternative explicitly: a visible ~15° kink, and this project has direct history
+  (§13 v2) of treating exactly this class of faceted transition as worth a full rebuild to fix,
+  not a shrug. Preserving tangency here is consistent with that established standard, not a new
+  or arbitrary bar.
+- **The proportion the 22mm number was actually protecting is preserved almost exactly**:
+  22/80=27.5% intended, 21.73/80=27.16% built — a gap smaller than what anyone could reliably see
+  against the reference image the original figure was itself eyeballed from. **This is not "the
+  Coder got close but had to compromise" — it's a resolution that hits the real design intent
+  (the visual proportion) while correctly deprioritizing the specific decimal, which was always
+  the softer of the two constraints.**
+
+**My verdict: right call, cleanly executed, and the tradeoff was disclosed rather than hidden —
+exactly the standard this project has held every prior revision to.**
+
+## 4. Did anything else move that shouldn't have?
+
+No. Checked everything a sphere-radius change could plausibly disturb: dome height (29.000mm,
+unchanged, confirmed), dome base OD (80.000mm exact, independently re-derived from the new sphere
+placement, not just carried over), total lid height and bounding box (39.000mm / 49.000mm,
+unchanged), and the manifold/void signature (still 2 components, still `BREP_WITH_VOIDS`, still 13
+faces in the same 6+3+1+3 breakdown, and the void's own volume is numerically identical to last
+round — confirming the plug region genuinely wasn't touched, not just assumed unaffected because
+it's a different feature). Material volume increased +0.92% as claimed, matching a same-method
+mesh-to-mesh comparison against the prior round almost exactly (+0.915% measured). **This was a
+genuinely scoped, single-parameter-family fix, not a broader change presented as a small one.**
+
+## Is this ready for the Reviewer?
+
+**Yes, with no new open items from this specific fix.** The R65 finding is now closed correctly —
+not just patched to hit a number, but re-derived properly, with the underlying tradeoff (tangency
+vs. exact diameter) reasoned through and disclosed rather than glossed over. The two items already
+on record from RE-TEST PASS 9 remain open and are restated once more, unaffected by this fix: (1)
+the "10mm flat brim ring" documentation-vs-as-built gap (cosmetic/documentation only), and (2) the
+pre-existing, still-unresolved neck-opening-vs-real-remains-bag `ESTIMATED` risk, which no lid-only
+change can touch. Neither blocks this pass.

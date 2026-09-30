@@ -106,3 +106,73 @@ reduced (not zero) risk, not a "resolved and can be ignored" status. See tests.m
 pass above). **Overall project status remains CONDITIONAL PASS — BLOCKED for production sign-off**
 on that unrelated item; this fix itself is cleanly verified and closes out finding #2 in the
 original verdict's "what did not pass cleanly" list.
+
+---
+---
+
+# RE-TEST PASS — v2 Body-Profile Revision ("Thrown-Ceramic" Rounder Silhouette, 2026-09-10), Independent Verification (2026-09-11)
+
+## Verdict on this revision: PASS — clean, accurately-executed rebuild; standing blocker unchanged
+
+**Scope, per task instruction.** Independent, cold-start verification of the Medium body's v2
+profile revision (`specs.md` §4.7): a rounder "thrown-ceramic" silhouette applied to the geometry
+**below P3 only** (base, belly, shoulder). The lid, alignment plug, and `neck-fit-test-medium`
+article were explicitly out of scope — confirmed untouched. Every figure below was independently
+re-derived from the exported `urn-body-medium.{step,3mf,stl}`, not read from the Coder's own
+reported numbers, using STEP entity-level parsing (the authoritative, tessellation-free source for
+the highest-stakes claims), 3MF/STL mesh analysis, and a `git`/timestamp/md5 audit. Full detail in
+`tests.md`'s "RE-TEST PASS — v2 Body-Profile Revision" section (RT2-0 through RT2-12).
+
+**This is a clean pass on every one of the 12 items specified in the verification task**, with
+several claims (G1 shoulder tangency, R6/R4 fillet tangency, P3-and-above identity) confirmed at a
+higher level of rigor than mesh comparison alone — directly from the raw STEP B-rep/Bezier
+control-point data, which is immune to mesh-tessellation noise.
+
+| # | Item | Result |
+|---|---|---|
+| 1 | Single valid manifold solid — watertight, V−E+F=2, 0 non-manifold edges (STEP/3MF/STL) | **PASS** — confirmed exactly (V=56,158, E=168,468, F=112,312, V−E+F=2) in both STL and 3MF; STEP is a single `MANIFOLD_SOLID_BREP`/`CLOSED_SHELL` |
+| 2 | Cavity volume — target 819.4 cm³, band 778.4–860.3 cm³; Coder reported 844.703 cm³ | **PASS, genuinely in-band** — independently measured **844.31 cm³** (+3.04%) via cross-section integration, cross-checked at 844.16 cm³ via an envelope-minus-material method; ~16 cm³ / 2% margin remains to the ceiling, not a near-miss. Method validated first against the known-good v1 body (805.91 cm³, bracketed by the original Tester's 806.1 and Reviewer's 805.30). |
+| 3 | Base OD = 88mm (unchanged from v1); base OD ≥ collar OD, both 88mm parity | **PASS, exact** — both the base's flat cylindrical band and the collar's rim vertex trace to the *same literal* `44.` value in the STEP file; true bit-for-bit parity, not just numerically close |
+| 4 | Belly max OD = 120.4mm, single point, zero overshoot | **PASS** — 0 of ~1,300 full-height samples exceed 60.2mm radius anywhere; STEP control point confirms a true single apex (r=60.2, z=59) with zero-slope tangent handles on both adjoining curves |
+| 5 | Shoulder — tangent-continuous (G1), no kink (literal G2 not required, per task) | **PASS, rigorously confirmed** — raw Bezier tangent vectors at P2 are collinear to 5 significant figures on both the external and internal profile; slope at the junction (dr/dz=−0.35, 19.29° from vertical) matches the spec's own stated value almost exactly |
+| 6 | Foot fillets — external R6, internal floor-to-wall R4, real torus faces, tangent | **PASS, exact** — confirmed directly from the two `TOROIDAL_SURFACE` STEP entities (minor radii 6.0mm and 4.0mm exactly), with analytic tangency to both the flat plane and the adjoining cylindrical walls confirmed via the major+minor=cylinder-radius identity |
+| 7 | Overall height = 131mm exact | **PASS, exact** — mesh z-bounds 0.000000–131.000000mm in both STL and 3MF |
+| 8 | Nominal wall 3.2mm radial through reshaped span; perpendicular min (Coder: ~2.71mm @ z~75) not below 0.8mm floor | **PASS** — radial wall confirmed 3.20±0.01mm throughout; independently measured perpendicular minimum **2.7107mm @ z=73.5mm** — matches the Coder's figure closely, confirmed not worse, and 3.4× clear of the 0.8mm floor. Also checked the collar-blend band separately for a hidden worse minimum — found none. |
+| 9 | P3 and above byte-identical to v1 (collar bore 72mm ID, collar OD 88mm, neck OD 78.4mm, P3→P4 blend) | **PASS, at the highest available rigor** — the exact *set* of point radii present in the STEP file at z=119 (P3) and z=131 (P4) is identical, literal-for-literal, between v1 and v2; the shoulder-region radii correctly differ (confirming the comparison isn't a trivial false-positive). Mesh comparison corroborates: ≤18-micron residual differences at/above P3 (tessellation-level noise) vs. multi-millimeter real differences below P3. |
+| 10 | Print orientation (base down, Z=0); overhangs — faired lower body (Coder: ~27.4°) and R6 foot-fillet underside (Coder: ~1.76mm below 45°) | **PASS** — lower-body peak independently measured at 27.39° (matches almost exactly); foot-fillet 45° crossing solved analytically from the exact torus geometry at z=1.757mm (matches to 3 sig. figs.). **Named, non-blocking finding:** this lower-body overhang is nearly double v1's (~16.4°) — still self-supporting, but a real, quantified cost of the rounder profile, not zero-cost. Also computed (not requested, but relevant): approximate tip-over angle drops from v1's ~40.2° to v2's ~35.8° as a consequence of the R6-fillet's smaller flat contact footprint (88mm→76mm) — still a comfortable margin for normal handling, but a concrete number rather than an unverified "still stable" assertion. |
+| 11 | `urn-lid-medium.*` and `neck-fit-test-medium.*` NOT modified | **PASS** — `git diff --stat HEAD` is empty for all six files; timestamps unchanged (predating this revision); STL md5 for `neck-fit-test-medium` matches exactly across git HEAD, working tree, and the prior pass's recorded value |
+| 12 | Standing item: 72mm neck ID remains `ESTIMATED`/untested | **Restated, not re-litigated** — unaffected by this revision (confirmed via item 9: everything at/above P3, including the entire neck/collar, is byte-identical to the already-blocked v1 geometry) |
+
+## What this re-test does NOT change
+
+**The project's overall status remains CONDITIONAL PASS — BLOCKED for production sign-off**, per
+the original verdict above. The v2 body-profile revision is a purely cosmetic/silhouette rebuild
+below P3; it does not touch, resolve, worsen, or otherwise interact with the standing blocking item
+(§4.3's 72mm neck/collar ID, `ESTIMATED` and untested against a real medium-pet remains bag — see
+item 12 above and the original verdict's item 1). **This routes back to the Planner/requester, not
+a modeling fix, and remains gated behind either a physical `neck-fit-test-medium` bag test or
+explicit written risk acceptance before any full production print of this body.**
+
+## New findings from this pass worth carrying forward (non-blocking)
+
+1. **Lower-body overhang roughly doubled by the rounder profile (16.4°→27.4° peak, still well under
+   the 45° guideline).** Not a support-triggering change, but a real trade-off of the aesthetic
+   revision — worth a visual check on the first print for layer-stepping quality on this now more
+   sharply curved surface, distinct from the pre-existing neck-collar-blend watch-item.
+2. **Approximate tip-over stability margin reduced from ~40.2° to ~35.8°** by the R6 foot fillet's
+   smaller flat contact footprint (88mm→76mm diameter). Both figures represent a comfortable margin
+   for normal handling and accidental knocks — this is not a functional concern — but it's now a
+   quantified number rather than the spec's qualitative "still stable" claim, useful if a future
+   revision pushes the base rounding further.
+3. **No slicer available in this environment** (same limitation as every prior pass on this
+   project) — recommend an actual slicer preview pass before production printing, specifically to
+   visually confirm print quality on the new faired lower-body curve (not support necessity, which
+   the geometry rules out at 27.4° peak).
+
+## Recommendation
+
+**Approve the v2 body-profile revision itself** — it is a faithful, correctly-executed
+implementation of the approved rounder-silhouette mockup, verified independently to a high degree of
+rigor with no modeling defects found. **Do not release the Medium build for a full production
+print** until the pre-existing, unaffected §4.3 neck-ID blocker is resolved (physical bag test or
+written risk acceptance) — this was true before this revision and remains true after it.

@@ -15,6 +15,13 @@
     "openai-image-gen": {
       "command": "H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-image-gen\\.venv\\Scripts\\python.exe",
       "args": ["H:\\ClaudeStuff\\3d-print-team\\mcp-servers\\openai-image-gen\\server.py"]
+    },
+    "voicestudio": {
+      "type": "http",
+      "url": "http://127.0.0.1:3900/mcp/",
+      "headers": {
+        "X-OmniVoice-Client-Id": "claude-code"
+      }
     }
   }
 }

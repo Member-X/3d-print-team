@@ -1,0 +1,98 @@
+# WSHobson-Agents catalog
+
+Source: https://github.com/Member-X/WSHobson-Agents (snapshot 2026-09-30). Paths: plugins/<plugin>/agents/<name>.md, plugins/<plugin>/skills/<name>/SKILL.md, plugins/<plugin>/commands/<name>.md
+
+To refresh this file, ask the director to "refresh the hobson index".
+
+- **accessibility-compliance** | agents: ui-visual-validator | skills: screen-reader-testing, wcag-audit-patterns | commands: accessibility-audit
+- **agent-orchestration** | agents: context-manager | commands: improve-agent, multi-agent-optimize
+- **agent-teams** | agents: team-debugger, team-implementer, team-lead, team-reviewer | skills: multi-reviewer-patterns, parallel-debugging, parallel-feature-development, task-coordination-strategies, team-communication-protocols, team-composition-patterns | commands: team-debug, team-delegate, team-feature, team-review, team-shutdown, team-spawn, team-status
+- **api-scaffolding** | agents: backend-architect, django-pro, fastapi-pro, graphql-architect | skills: fastapi-templates
+- **api-testing-observability** | agents: api-documenter | commands: api-mock
+- **application-performance** | agents: frontend-developer, observability-engineer, performance-engineer | commands: performance-optimization
+- **arm-cortex-microcontrollers** | agents: arm-cortex-expert
+- **avoid-ai-writing** | skills: avoid-ai-writing
+- **backend-api-security** | agents: backend-architect, backend-security-coder
+- **backend-development** | agents: backend-architect, event-sourcing-architect, graphql-architect, performance-engineer, security-auditor, tdd-orchestrator, temporal-python-pro, test-automator | skills: api-design-principles, architecture-patterns, cqrs-implementation, event-store-design, microservices-patterns, projection-patterns, saga-orchestration, temporal-python-testing, workflow-orchestration-patterns | commands: feature-development
+- **before-you-build** | skills: before-you-build
+- **block-no-verify** | skills: block-no-verify-hook | commands: block-no-verify
+- **blockchain-web3** | agents: blockchain-developer | skills: defi-protocol-templates, nft-standards, solidity-security, web3-testing
+- **brand-landingpage** | skills: brand-landingpage
+- **business-analytics** | agents: business-analyst | skills: data-storytelling, kpi-dashboard-design
+- **c4-architecture** | agents: c4-code, c4-component, c4-container, c4-context | commands: c4-architecture
+- **cicd-automation** | agents: cloud-architect, deployment-engineer, devops-troubleshooter, kubernetes-architect, terraform-specialist | skills: deployment-pipeline-design, github-actions-templates, gitlab-ci-patterns, secrets-management | commands: workflow-automate
+- **cloud-infrastructure** | agents: cloud-architect, deployment-engineer, hybrid-cloud-architect, kubernetes-architect, network-engineer, service-mesh-expert, terraform-specialist | skills: cost-optimization, hybrid-cloud-networking, istio-traffic-management, linkerd-patterns, mtls-configuration, multi-cloud-architecture, service-mesh-observability, terraform-module-library
+- **code-documentation** | agents: code-reviewer, docs-architect, tutorial-engineer | commands: code-explain, doc-generate
+- **code-refactoring** | agents: code-reviewer, legacy-modernizer | commands: context-restore, refactor-clean, tech-debt
+- **codebase-cleanup** | agents: code-reviewer, test-automator | commands: deps-audit, refactor-clean, tech-debt
+- **comprehensive-review** | agents: architect-review, code-reviewer, security-auditor | commands: full-review, pr-enhance
+- **conductor** | agents: conductor-validator | skills: context-driven-development, track-management, workflow-patterns | commands: implement, manage, new-track, revert, setup, status
+- **content-marketing** | agents: content-marketer, search-specialist
+- **context-management** | agents: context-manager | commands: context-restore, context-save
+- **customer-sales-automation** | agents: customer-support, sales-automator
+- **data-engineering** | agents: backend-architect, data-engineer | skills: airflow-dag-patterns, data-quality-frameworks, dbt-transformation-patterns, spark-optimization | commands: data-driven-feature, data-pipeline
+- **data-validation-suite** | agents: backend-security-coder
+- **database-cloud-optimization** | agents: backend-architect, cloud-architect, database-architect, database-optimizer | commands: cost-optimize
+- **database-design** | agents: database-architect, sql-pro | skills: postgresql-table-design
+- **database-migrations** | agents: database-admin, database-optimizer | commands: migration-observability, sql-migrations
+- **debugging-toolkit** | agents: debugger, dx-optimizer | commands: smart-debug
+- **dependency-management** | agents: legacy-modernizer | commands: deps-audit
+- **deployment-strategies** | agents: deployment-engineer, terraform-specialist
+- **deployment-validation** | agents: cloud-architect | commands: config-validate
+- **developer-essentials** | agents: monorepo-architect | skills: auth-implementation-patterns, bazel-build-optimization, code-review-excellence, debugging-strategies, e2e-testing-patterns, error-handling-patterns, git-advanced-workflows, monorepo-management, nx-workspace-patterns, sql-optimization-patterns, turborepo-caching
+- **dgx-spark-ops** | agents: dgx-spark-ops-engineer | skills: spark-environment-setup, spark-memory-thermal-ops, spark-training-gotchas | commands: spark-preflight
+- **distributed-debugging** | agents: devops-troubleshooter, error-detective | commands: debug-trace
+- **documentation-generation** | agents: api-documenter, docs-architect, mermaid-expert, reference-builder, tutorial-engineer | skills: architecture-decision-records, changelog-automation, openapi-spec-generation | commands: doc-generate
+- **documentation-standards** | skills: grounded-vault, hads
+- **dotnet-contribution** | agents: dotnet-architect | skills: dotnet-backend-patterns
+- **error-debugging** | agents: debugger, error-detective | commands: error-analysis, error-trace, multi-agent-review
+- **error-diagnostics** | agents: debugger, error-detective | commands: error-analysis, error-trace, smart-debug
+- **file-conversion** | skills: file-conversion
+- **framework-migration** | agents: architect-review, legacy-modernizer | skills: angular-migration, database-migration, dependency-upgrade, react-modernization | commands: code-migrate, deps-upgrade, legacy-modernize
+- **frontend-mobile-development** | agents: frontend-developer, mobile-developer | skills: nextjs-app-router-patterns, react-native-architecture, react-state-management, tailwind-design-system | commands: component-scaffold
+- **frontend-mobile-security** | agents: frontend-developer, frontend-security-coder, mobile-security-coder | commands: xss-scan
+- **full-stack-orchestration** | agents: deployment-engineer, performance-engineer, security-auditor, test-automator | commands: full-stack-feature
+- **functional-programming** | agents: elixir-pro, haskell-pro
+- **game-development** | agents: minecraft-bukkit-pro, unity-developer | skills: godot-gdscript-patterns, unity-ecs-patterns
+- **git-pr-workflows** | agents: code-reviewer | commands: git-workflow, onboard, pr-enhance
+- **hermes-tweet** | skills: hermes-tweet
+- **hr-legal-compliance** | agents: hr-pro, legal-advisor | skills: employment-contract-templates, gdpr-data-handling
+- **incident-response** | agents: code-reviewer, debugger, devops-troubleshooter, error-detective, incident-responder, test-automator | skills: incident-runbook-templates, on-call-handoff-patterns, postmortem-writing | commands: incident-response, smart-fix
+- **javascript-typescript** | agents: javascript-pro, typescript-pro | skills: javascript-testing-patterns, modern-javascript-patterns, nodejs-backend-patterns, typescript-advanced-types | commands: typescript-scaffold
+- **julia-development** | agents: julia-pro
+- **jvm-languages** | agents: csharp-pro, java-pro, scala-pro
+- **kubernetes-operations** | agents: kubernetes-architect | skills: gitops-workflow, helm-chart-scaffolding, k8s-manifest-generator, k8s-security-policies
+- **llm-application-dev** | agents: ai-engineer, prompt-engineer, vector-database-engineer | skills: embedding-strategies, hybrid-search-implementation, langchain-architecture, llm-evaluation, prompt-engineering-patterns, rag-implementation, similarity-search-patterns, vector-index-tuning | commands: ai-assistant, langchain-agent, prompt-optimize
+- **llm-finetuning** | agents: llm-finetuning-architect, llm-finetuning-eval-engineer, llm-finetuning-training-engineer | skills: checkpoint-promotion, dataset-curation, eval-harness-first, finetuning-method-selection, grpo-rlvr-training, lora-qlora-recipes, preference-optimization, quantized-export, trace-to-training-data, vision-sft | commands: finetune, promote-checkpoint
+- **machine-learning-ops** | agents: data-scientist, ml-engineer, mlops-engineer | skills: ml-pipeline-workflow, recsys-pipeline-architect | commands: ml-pipeline
+- **meigen-ai-design** | agents: gallery-researcher, image-generator, prompt-crafter | commands: find, gen
+- **multi-platform-apps** | agents: backend-architect, flutter-expert, frontend-developer, ios-developer, mobile-developer, ui-ux-designer | commands: multi-platform
+- **observability-monitoring** | agents: database-optimizer, network-engineer, observability-engineer, performance-engineer | skills: distributed-tracing, grafana-dashboards, prometheus-configuration, slo-implementation | commands: monitor-setup, slo-implement
+- **operating-kit** | agents: code-review-preshipment, deploy-with-verification, prod-logs-health-check, session-end, session-start
+- **payment-processing** | agents: payment-integration | skills: billing-automation, paypal-integration, pci-compliance, stripe-integration
+- **performance-testing-review** | agents: performance-engineer, test-automator | commands: ai-review, multi-agent-review
+- **plugin-eval** | agents: eval-judge, eval-orchestrator | skills: evaluation-methodology | commands: certify, compare, eval
+- **pptx-deck-creation** | agents: pptx-deck-creation-builder | skills: pptx-deck-context, pptx-quality-gates, pptx-reference-deck-analysis, pptx-slide-specification, pptx-visual-assets
+- **protect-mcp** | agents: policy-enforcer, receipt-verifier | skills: protect-mcp-setup | commands: audit-chain, verify-receipt
+- **python-development** | agents: django-pro, fastapi-pro, python-pro | skills: async-python-patterns, python-anti-patterns, python-background-jobs, python-code-style, python-configuration, python-design-patterns, python-error-handling, python-observability, python-packaging, python-performance-optimization, python-project-structure, python-resilience, python-resource-management, python-testing-patterns, python-type-safety, uv-package-manager | commands: python-scaffold
+- **quantitative-trading** | agents: quant-analyst, risk-manager | skills: backtesting-frameworks, risk-metrics-calculation
+- **reverse-engineering** | agents: firmware-analyst, malware-analyst, reverse-engineer | skills: anti-reversing-techniques, binary-analysis-patterns, memory-forensics, protocol-reverse-engineering
+- **review-agent-governance** | agents: review-policy-author | skills: review-agent-setup | commands: approve-review, list-pending
+- **security-compliance** | agents: security-auditor | commands: compliance-check
+- **security-scanning** | agents: security-auditor, threat-modeling-expert | skills: attack-tree-construction, sast-configuration, security-requirement-extraction, stride-analysis-patterns, threat-mitigation-mapping | commands: security-dependencies, security-hardening, security-sast
+- **seo-analysis-monitoring** | agents: seo-authority-builder, seo-cannibalization-detector, seo-content-refresher
+- **seo-content-creation** | agents: seo-content-auditor, seo-content-planner, seo-content-writer
+- **seo-technical-optimization** | agents: seo-keyword-strategist, seo-meta-optimizer, seo-snippet-hunter, seo-structure-architect
+- **shell-scripting** | agents: bash-pro, posix-shell-pro | skills: bash-defensive-patterns, bats-testing-patterns, shellcheck-configuration
+- **ship-mate** | agents: architect, implement, orchestrate, playwright, qa, review | skills: scan | commands: setup, ship
+- **signed-audit-trails** | skills: signed-audit-trails-recipe
+- **skill-forge-essentials** | skills: ai-debt-detector, session-guard, visual-edit-precision
+- **social-publishing** | agents: social-publishing-publisher | skills: social-publishing
+- **startup-business-analyst** | agents: startup-analyst | skills: competitive-landscape, market-sizing-analysis, startup-financial-modeling, startup-metrics-framework, team-composition-analysis | commands: business-case, financial-projections, market-opportunity
+- **superself** | skills: superself
+- **systems-programming** | agents: c-pro, cpp-pro, golang-pro, rust-pro | skills: go-concurrency-patterns, memory-safety-patterns, rust-async-patterns | commands: rust-project
+- **tdd-workflows** | agents: code-reviewer, tdd-orchestrator | commands: tdd-cycle, tdd-green, tdd-red, tdd-refactor
+- **team-collaboration** | agents: dx-optimizer | commands: issue, standup-notes
+- **ui-design** | agents: accessibility-expert, design-system-architect, ui-designer | skills: accessibility-compliance, design-system-patterns, interaction-design, mobile-android-design, mobile-ios-design, react-native-design, responsive-design, visual-design-foundations, web-component-design | commands: accessibility-audit, create-component, design-review, design-system-setup
+- **unit-testing** | agents: debugger, test-automator | commands: test-generate
+- **web-scripting** | agents: php-pro, ruby-pro

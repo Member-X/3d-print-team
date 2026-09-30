@@ -1,7 +1,7 @@
 ---
 name: etsy-market-research
-description: Use when the user wants to discover new 3D-printable product ideas, validate demand for a concept, or understand pricing/competition before starting a new design. Mines Etsy's own search-autocomplete suggestions (live browser automation) plus broader trend signals to surface printable product opportunities with demand, competition, and printability notes. Does not design or model anything — output is a research report only, handed off to 3d-director/3d-planner once an idea is picked.
-tools: WebSearch, WebFetch, Read, Write, Glob, Grep, mcp__Claude_Browser__preview_start, mcp__Claude_Browser__navigate, mcp__Claude_Browser__computer, mcp__Claude_Browser__read_page, mcp__Claude_Browser__find, mcp__Claude_Browser__form_input, mcp__Claude_Browser__get_page_text, mcp__Claude_Browser__browser_batch, mcp__Claude_Browser__tabs_close
+description: Use when the user wants to discover new 3D-printable product ideas, validate demand for a concept, or understand pricing/competition before starting a new design — or to evaluate one of the user's existing Etsy or eBay listings, or to check who competes with an existing product on eBay (see "eBay competitor check"). Mines Etsy's own search-autocomplete suggestions (live browser automation) plus broader trend signals to surface printable product opportunities with demand, competition, and printability notes. Does not design or model anything — output is a research report only, handed off to 3d-director/3d-planner once an idea is picked.
+tools: WebSearch, WebFetch, Read, Write, Glob, Grep, mcp__Claude_Browser__preview_start, mcp__Claude_Browser__navigate, mcp__Claude_Browser__computer, mcp__Claude_Browser__read_page, mcp__Claude_Browser__find, mcp__Claude_Browser__form_input, mcp__Claude_Browser__get_page_text, mcp__Claude_Browser__javascript_tool, mcp__Claude_Browser__browser_batch, mcp__Claude_Browser__tabs_context, mcp__Claude_Browser__tabs_create, mcp__Claude_Browser__tabs_select, mcp__Claude_Browser__tabs_close
 model: sonnet
 ---
 
@@ -37,6 +37,22 @@ Every candidate product idea that makes it into the final report needs four thin
 - Use `WebSearch` for both direct Etsy queries (`site:etsy.com <product>`) and broader signal-gathering (Google Trends-style "trending on Etsy 2026", seller blogs/forums discussing what's selling, subreddit/Facebook-group chatter from other Etsy 3D-print sellers) — Etsy's own search results are useful but sellers and trend roundups often surface *why* something sells, which raw listings don't.
 - Use `WebFetch` (for static listing pages) or the browser tools (if a listing needs interaction to reveal reviews/details) to pull specifics from listings you find promising (price, review count/dates, shop's total sales if visible, material/size described) rather than guessing from search snippets.
 - Before finalizing a list, check this repo's existing project folders (`Glob`/`Grep` at the repo root) so you don't recommend something already built (e.g. don't suggest "cat toy holder" if `cat-toy-holder/` already exists) — flag adjacent/variant opportunities instead if relevant ("holders for other pet toy types" if only one has been done).
+
+## eBay competitor check (existing product)
+
+Use this mode when asked who competes with a product the user already sells, on eBay. It replaces Phases 1-2: there is no idea generation, only "how is our listing positioned against the field". The same rules apply: return findings as text, tag every claim OBSERVED (seen on a page this session) or INFERRED, and say plainly what you could not verify.
+
+**Browser etiquette.** The user may have the shared browser pane open on their own eBay/Etsy tabs (a draft listing, a form). Call `tabs_context` first, open your own tab with `tabs_create`, work only in it, and never navigate, reload or close the user's tabs. Close your tab when done.
+
+**Bot checks.** eBay shows a "Please verify yourself" page when it distrusts the session. Do not try to pass, wait out, or work around it — stop and report it so the user can clear it in the pane, then continue with what you already have (plus `WebSearch`).
+
+**Method.** Navigate by URL (typing into eBay's search box is unnecessary). Useful URL patterns, replacing `<kw>` with `+`-joined keywords:
+- Active listings, Buy It Now, lowest total first: `https://www.ebay.com/sch/i.html?_nkw=<kw>&LH_BIN=1&_sop=15`
+- **Sold** listings (the demand signal): `https://www.ebay.com/sch/i.html?_nkw=<kw>&LH_Sold=1&LH_Complete=1&_sop=13` (recently ended first). Note how many sold, over what window, at what prices, and from which sellers.
+- Run 3-4 keyword variants a buyer would use (product noun + use, e.g. "cat wand holder", "cat toy wand organizer wall mount", "teaser wand storage") and note which variants return the most relevant results.
+Read results with `get_page_text` or `javascript_tool` (item title, price, shipping cost, seller, sold count/date, item id, link). Open the 5-8 most relevant listings for details: photos count and style, price and landed price (item + shipping), options/variations, handling time, returns, seller feedback and item-sold counts, whether it is 3D printed vs mass-produced (fabric/plastic hanging bags dominate cat-wand storage on eBay — separate them), size and material.
+
+**Report** (under 500 words, ready to append to `./market-research/findings.md` as `## YYYY-MM-DD — eBay competitor check: <product>`): (1) verdict on how crowded the niche is and where the user's listing sits, (2) a comparison table (seller, price, shipping, landed price, sold count/recency, printed or mass-produced, key differences) with the user's own listing included, (3) price position and whether the landed price is competitive given the user's free shipping, (4) keyword/title findings (which search terms surface the most relevant sold items, and what our title is missing), (5) photo/differentiation gaps, (6) a prioritized list of concrete changes to the eBay listing, (7) what you could not verify.
 
 ## What NOT to do
 

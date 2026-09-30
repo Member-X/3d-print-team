@@ -2202,3 +2202,364 @@ restated once more so they don't quietly drop out of the handoff: (1) the "10mm 
 documentation-vs-as-built gap (R67, cosmetic/documentation only, unaffected by this fix) and (2)
 the pre-existing, still-open neck-opening-vs-real-remains-bag `ESTIMATED` risk (§4.4), which this
 lid-only fix does not and cannot touch.
+
+---
+---
+
+# RE-TEST PASS 11 — v8 body revision (rounder "thrown-ceramic" profile, reshaped below P3) — cold-start independent verification
+
+Method note: this pass started cold (no memory of the build session) and verified strictly from
+the exported deliverable files — `step/urn-body.step` (raw STEP entity parsing, no CAD kernel),
+`3mf/urn-body.3mf` (zip/XML parsing + `trimesh` mesh load), and `stl/urn-body.stl` (`trimesh`,
+dense cross-sectional profiling at 0.02-0.1mm resolution, nearest-point wall-thickness search via
+`scipy.spatial.cKDTree`, facet-adjacency-angle crease detection) — diffed against the archived
+pre-v8 baseline at `archive/pre-v8-rounder-body/{step,3mf,stl}/urn-body.step` using the identical
+methods on both, not the Coders report. Per the task framing, three build decisions are treated as
+pre-accepted and are not re-litigated as defects below: the belly keeping its v7 hand-sculpted
+shape (not rebuilt as a broad-swell Bezier), the shoulder witness landing at internal r 47.0mm
+(not the specs originally-written 45.0mm), and the foot fillets being tangent to v7s real
+gently-flaring foot wall (not an idealized vertical wall). All are independently confirmed present
+and correctly built below — the point of re-checking them was to verify the accepted decision was
+actually what got built, not to second-guess the decision itself.
+
+## R76. Single valid manifold solid — confirmed across STEP, 3MF, and STL, with one honest gap disclosed
+
+- STL: watertight, winding-consistent, Euler number = 2, 0 edges with an incident-face count
+  other than 2 (checked directly, not inferred) — 146,894 triangles, 73,449 vertices, single
+  connected component (trimesh.split returns exactly 1 body).
+- 3MF: independently loaded and re-checked with the same method (not assumed to inherit the STL
+  result) — a different tessellation (44,022 triangles, a coarser re-mesh than the STLs), also
+  watertight, Euler = 2, 0 non-2-count edges, 1 connected component. The fact that a completely
+  independent retesselation of the same B-rep passes the identical checks is stronger evidence of a
+  genuinely valid solid than checking one format alone.
+- STEP: raw entity parsing (not a CAD-kernel read) finds exactly 1 CLOSED_SHELL and
+  exactly 1 MANIFOLD_SOLID_BREP — both singular, as required for one valid solid. 10
+  ADVANCED_FACE entities — matches the Coders reported face count exactly. Composed of 3
+  B_SPLINE_SURFACE (compound B_SPLINE_SURFACE_WITH_KNOTS/RATIONAL_B_SPLINE_SURFACE entities,
+  down from 5 in pre-v8), 2 CYLINDRICAL_SURFACE, 2 new TOROIDAL_SURFACE (0 in pre-v8 — see
+  R81), and 3 PLANE — 3+2+2+3 = 10, reconciles exactly.
+- Honest gap: the Coders reported "12 edges" could not be independently reproduced by text
+  parsing alone. Raw EDGE_CURVE entity count is 20 (up from pre-v8s 18); resolving each to its
+  two VERTEX_POINT 3D coordinates and de-duplicating by coordinate pair gives 16 distinct
+  vertex-pairs — same count (16) in both v8 and pre-v8, so at least self-consistent, but not the
+  Coders "12." B-rep topological edge/vertex/face (V-E+F=2) accounting depends on kernel-internal
+  loop/seam conventions that arent reliably recoverable from flat STEP text without a real CAD
+  kernel — flagged honestly rather than forcing a match. This does not weaken the manifold
+  finding: the mesh-level Euler=2 / watertight / 0-non-manifold-edge checks above are the
+  authoritative, directly-checkable proof of a valid printable solid in both exported mesh formats,
+  and the STEP-level shell/solid/face counts that are independently reproducible all match.
+
+Result: PASS on the decisive checks (watertight, manifold, single solid, single shell, correct
+face count, matching across all three formats); one sub-item (raw STEP edge count) noted as not
+independently reproducible rather than silently assumed correct.
+
+## R77. Cavity volume — independently measured, matches the Coders figure closely, with a real (non-blocking) surprise in the "why"
+
+Measured via solid-of-revolution integration: dense radial cross-sections of the inner-wall
+boundary from floor-top to rim (trimesh.section_multiplane at 0.1mm steps, ~1,530 planes),
+pi*r_inner(z)^2 integrated by the trapezoidal rule. Run twice with slightly different
+endpoint-interpolation handling as a self-consistency check:
+
+- v8 measured cavity: 1569.82 cm3 and 1570.19 cm3 (two independent integration runs, 0.02%
+  apart) — essentially exact agreement with the Coders reported 1570.3 cm3 (within 0.03-0.05%).
+- -0.55% to -0.58% vs. the ~1579 cm3 binding target (confirmed from specs.md section 4.1 as the
+  current authoritative target, not the historical 1474.8/1477.8 cm3 figures) — comfortably inside
+  the +/-5% band (~1500-1658 cm3), ~70 cm3 above the floor and ~88 cm3 below the ceiling.
+- Cross-validation of method: the identical method applied to the archived pre-v8 (v7) body
+  returns 1579.10 cm3 and 1579.85 cm3 — matching the long-established, many-times-independently-
+  verified ~1579 cm3 v7 figure almost exactly. Since my method reproduces a number this project
+  has confirmed at least four separate times before, I trust it applied to v8.
+
+Result: PASS, independently confirmed, inside the pre-authorized band.
+
+A real, non-blocking surprise worth documenting, not just passing over: the specs own
+delta-from-baseline hand-calc (section 4.2.3) predicted the v8 reshape would add ~27.8 cm3
+(P1->P3 chord-sum delta) for a total estimate of ~1608 cm3. The actual built cavity instead
+decreased slightly from the v7 baseline (1579->1570, delta ~-9 cm3) — a ~37 cm3 gap from the
+hand-calcs predicted direction, though still safely inside the band either way. Root-caused by
+directly diffing the v8 vs. pre-v8 internal-radius profile (see R83s table): the new, longer
+belly tangent-handles that create the "broad swell" (move 1) pull the curve inward through the
+mid-flank (z~80-108mm) by as much as 4.2mm at z~100mm relative to v7s equivalent curve — this
+is a larger narrowing than the +/-1-2 cm3 "upper flank" correction term the specs own fairing
+estimate anticipated. This more than offsets the volume gained at the shoulder witness itself
+(+4.58mm external radius at Z=112.5) and the shoulder-to-P3 segment. This is exactly the kind of
+gap the specs own section 4.2.3 explicitly flagged as expected and pre-authorized ("Hand-calc -> CAD
+confidence is lower for Large than for Small/Medium... the real CAD cavity could still land
+somewhat off ~1608 cm3; the flag-back triggers above cover both directions") — no flag-back is
+triggered because 1570 cm3 is well inside the band, but the reason the hand-calc missed by this
+much is a real, verifiable geometric effect (the frustum/chord method structurally cannot see a
+curve dipping inward between its sampled endpoints), not a measurement inconsistency, and is worth
+recording for whoever tunes this profile next.
+
+## R78. Belly max OD — PASS, single point, zero overshoot, confirmed in both mesh formats
+
+Dense radial scan (0.1-0.2mm steps) of the full outer profile, in both deliverable mesh formats:
+
+- STL: peak outer radius 76.9657mm (OD 153.9314mm) at z~68.8-69.25mm. Zero samples anywhere
+  in the full 0-153.5mm height range exceed 76.966mm; zero exceed 77.066mm (target+0.1mm).
+- 3MF: peak outer radius 76.9660mm (OD 153.9319mm) at z~68.78mm — matches the STL to
+  0.0003mm.
+- Broad swell, not a sharp point: radius stays within 0.05mm of the peak across z~66.2-71.2mm
+  (53 samples) and within 0.10mm across z~65.1-72.1mm — a genuine broad swell, consistent with the
+  specs move-1 intent (lengthened tangent handles), not a plateau (v7s shape) and not a cusp.
+- Cross-checked against the archived pre-v8 body: peak radius 76.9651-76.9657mm at z~69.09-69.12mm
+  — confirms the belly apex radius and absolute height are unchanged, exactly as the spec
+  requires ("position and radius unchanged").
+
+Result: PASS. 153.9mm OD +/-0.1mm target met almost exactly (153.93 vs. 153.9), single
+maximum-radius point, no overshoot above or below the belly, matches the pre-accepted "belly keeps
+its v7 shape" framing (radius/height untouched; only the apex curvature was faired into a swell).
+
+## R79. Overall height, base plane, and XY centering — PASS, exact
+
+- Overall height: STL and 3MF bounds both run Z = [~0, 153.5]mm exactly (STL min Z =
+  2.2e-15, i.e. exact 0 to floating-point precision).
+- Base face at Z=0: confirmed — the entire bottom-cap vertex ring sits at Z=0 in both formats.
+- Centered X/Y: mesh centroid at (-0.0004, -0.0009) — within normal mesh-tessellation noise of
+  the origin. Bounds are symmetric to within ~0.01mm (X: [-76.696, 76.965]; Y: [-76.956, 76.960]).
+
+Result: PASS, all three sub-items exact or effectively exact.
+
+## R80. Base OD "98mm at the top of the foot-fillet arc" — a precision/documentation note, not a defect (consistent with the pre-accepted foot-fillet decision)
+
+specs.md section 4.2.3 states the base OD "stays 98mm, now first reached at the top of the fillet arc
+(Z_ext ~7mm)" — this describes what would happen if the fillet were tangent to an idealized
+vertical r=49mm wall. Per the tasks pre-accepted framing, the fillet is actually tangent to
+v7s real, continuously-flaring foot wall instead. Measuring the real profile directly: the
+outer radius crosses r=49.0mm (98mm OD) momentarily at approximately z~2.7-2.8mm (between the
+z=2.5 sample at 48.97mm and the z=3.0 sample at 49.36mm), then keeps flaring outward continuously
+all the way to the belly — there is no sustained constant-98mm-OD section at all, at z~7mm or
+anywhere else.
+
+This is not a new defect introduced by v8 — the archived pre-v8 (v7) body shows the identical
+character: its own outer radius is already 49.005mm at z=0.02mm and climbs continuously to
+50.39mm by z=5mm, with no flat vertical section either. The "idealized vertical wall" the specs
+98mm/Z~7mm language assumes never existed even in v7. Recommend specs.md/parameters.md note
+this precisely (crossing height ~2.7mm, no sustained plateau) rather than carry forward the
+Z~7mm figure as if it were confirmed on the real geometry — a documentation-accuracy item, not a
+geometry defect, and not blocking.
+
+True flat bottom contact-disc OD, measured two independent ways in exact agreement:
+- STL: all 127 bottom-cap (Z=0) vertices sit at exactly r=43.6297mm (zero variance).
+- STEP: the external foot-fillet torus (TOROIDAL_SURFACE #16, R81 below) has major radius
+  43.6296748269217mm — matching the mesh figure to 4 decimal places, an exact
+  cross-format agreement between the raw B-rep parameter and the independently-tessellated mesh.
+- Contact-disc OD = 87.26mm. Contact-OD:height = 87.26/153.5 = 0.568, close to the tasks stated
+  "~89mm / 0.58" figure (small, immaterial rounding difference between "~89mm" and the precisely-
+  measured 87.26mm — both describe the same real, intentional, disclosed footprint reduction from
+  v7s ~98mm contact ring). Confirmed more stable than the specs original 0.55 target, as
+  claimed — PASS, not a defect.
+
+## R81. Foot fillets — confirmed as real analytic torus faces, both radii essentially exact, tangent on both sides
+
+Extracted directly from step/urn-body.step (0 TOROIDAL_SURFACE entities exist in the archived
+pre-v8 STEP — these are a genuine, verifiable new addition in v8, not merely claimed):
+
+| Fillet | STEP entity | Minor radius (measured) | Nominal | Deviation |
+|---|---|---|---|---|
+| Internal floor-to-wall | #15 TOROIDAL_SURFACE | 4.99753384748094mm | R5.0 | -2.466 micron |
+| External foot | #16 TOROIDAL_SURFACE | 6.99999749183678mm | R7.0 | -2.5 nm |
+
+The internal fillets -2.466-micron deviation matches the Coders own reported 4.99753 figure to 5
+decimal places — independently confirmed, and, as the Coder characterized it, immaterial (a
+3-point-arc-fit rounding artifact roughly 3 orders of magnitude finer than a print layer).
+
+Tangency, checked directly on the mesh (facet-adjacency-angle scan), not assumed from the STEP
+parameters alone:
+- Base-plane to external-fillet transition (z~0-0.5mm): max facet angle 6.6deg, mean 2.3deg — consistent
+  with ordinary tessellation faceting of a continuously curved region, not a real corner.
+- External-fillet to flaring-wall transition (z~6.5-8mm): max 5.2deg, mean 1.6deg.
+- Floor-plane to internal-fillet transition (z~4.5-5.5mm): max 7.4deg, mean 2.4deg.
+
+All three are in the same low range as ordinary curved-surface tessellation noise found elsewhere
+on this body, and an order of magnitude below the genuine 90deg corner correctly found at the flat
+top rim (R76/legitimate design edge) and well below the one real, small, pre-existing discontinuity
+found at P3 (R83, ~18.6deg, inherited from v7 unchanged). Result: PASS — both fillets are real,
+essentially-exact-radius, tangent torus faces, not polygon approximations or untangent stubs.
+
+## R82. Wall thickness — radial and true-perpendicular, both confirmed matching the Coders figures closely
+
+Radial (same-Z outer-minus-inner) across the reshaped z=10-135mm span: measured 3.94-4.08mm
+— matches the Coders reported 3.93-4.08mm range almost exactly (sampled at z=10, 20, 26.5, 30, 40,
+50, 60, 69, 80, 90, 95, 100, 107.5, 112.5, 120, 130, 135mm).
+
+True perpendicular (nearest-point) minimum, computed properly rather than approximated: built
+the full inner and outer meridian-profile point clouds (from the 0.1mm-resolution cross-section
+scan) and ran a scipy.spatial.cKDTree nearest-neighbor search from every outer-profile point to
+the inner-profile polyline — this measures the true minimum wall thickness along whatever direction
+is actually shortest, not a same-Z radial approximation (which overstates true thickness on a
+sloped wall).
+
+- Minimum: 2.7704mm at z=96.52mm (outer r=63.41mm) — matches the Coders reported ~2.78mm @
+  z~95 almost exactly, both in magnitude and location.
+- This is 3.46x the 0.8mm print-floor (tasks "3.5x" — matches).
+- The minimum occurs where the local outer-wall slope is steepest: independently measured
+  -46.2deg from vertical at this exact point (via np.gradient on the same profile) — this is
+  local steepness within the belly-to-shoulder span, which is a monotonically-shrinking-radius
+  region throughout (radius decreases from the belly apex all the way to P3, confirmed by the same
+  scan finding zero meaningfully-increasing steps in that span) — the same "shrinking cone,
+  self-supporting regardless of local angle" class this project has relied on since its earliest
+  passes, so the steep local angle here is a wall-thickness consideration, not an overhang risk.
+
+Result: PASS, both figures independently confirmed and comfortably above the print-minimum.
+
+## R83. P3-and-above byte-identical to v7 — the critical check for lid/plug fit, confirmed by four independent methods
+
+This is the single most consequential check this pass, since the lid, plug, and neck-fit-test
+all depend entirely on this region and were not rebuilt (R86).
+
+1. STEP-level cylindrical-surface parameters — exact match, not approximate:
+
+| Surface | v8 | pre-v8 (v7) | Match |
+|---|---|---|---|
+| Collar OD cylinder | r = 50.0mm (#25) | r = 50.0mm (#20) | exact |
+| Bore ID cylinder | r = 40.0mm (#26) | r = 40.0mm (#21) | exact |
+
+2. Mesh cross-section radius diff, z=138.5-153.3mm (v8 STL vs. pre-v8 STL, both independently
+re-sliced with the same method):
+
+| z (mm) | v8 outer | v7 outer | delta | v8 inner | v7 inner | delta |
+|---|---|---|---|---|---|---|
+| 138.5 | 44.004 | 44.002 | +0.002 | 40.000 | 40.000 | +0.000 |
+| 140.0 | 45.028 | 45.038 | -0.010 | 40.000 | 40.000 | +0.000 |
+| 142.0 | 47.008 | 47.025 | -0.017 | 40.000 | 40.000 | +0.000 |
+| 145.0 | 49.793 | 49.811 | -0.018 | 40.000 | 40.000 | +0.000 |
+| 145.5-153.3 | 50.000 | 50.000 | +0.000 | 39.987-40.000 | 39.959-40.000 | <=0.013 |
+
+All differences are <=0.02mm — consistent with v8s mesh having ~2.75x more triangles than the
+pre-v8 mesh (finer tessellation resolves the true analytic surface slightly more precisely), not a
+real geometric change. Bore ID is constant 40.000mm (80mm ID) throughout in both.
+
+3. P3->P4 external-blend peak overhang angle — matches the Coders reported figures almost
+exactly: fine-resolution (0.05mm) slope scan across z=138.5-145.6mm:
+- v8: peak 45.488deg from vertical at z=142.70mm.
+- pre-v8: peak 45.472deg from vertical at z=142.90mm.
+- Coder reported 45.48deg vs. v7s 45.46deg — my independent figures (45.488/45.472) match to within
+  0.01-0.02deg. Confirms this feature is unchanged, still marginally over the 45deg guideline on a
+  continuously curved surface (same previously-accepted "fine with adequate cooling" category this
+  project settled on across RE-TEST PASS 2/3/7).
+
+4. A small, pre-existing slope discontinuity found exactly at P3 (z=138.5mm) — present
+identically in both v8 and pre-v8, i.e. confirmed inherited/unchanged, not a new defect:
+fine-resolution (0.02mm) slope scan either side of z=138.5mm found a real, sudden dr/dz jump at
+the exact P3 boundary in both files:
+- v8: dr/dz goes from -0.0206 (just below P3, consistent with the required "flatten to dr/dz->0"
+  taper-end condition) to +0.2161 immediately above.
+- pre-v8: -0.0044 to +0.1092 at the identical location.
+- A facet-adjacency-angle scan independently flags this same location (z=138.5mm) as the largest
+  non-trivial angle anywhere on the body outside the legitimate flat-plane edges (~18.6deg in v8).
+
+This is not new — its the same small residual imperfection this project already found, fixed
+to a much smaller magnitude, and explicitly accepted in RE-TEST PASS 3 ("the largest single-step
+slope change anywhere in this span is about a quarter of the size of the instantaneous jump I
+measured last time at the exact same location" — my v8 measurement of a jump to dr/dz~0.22 is
+indeed roughly a quarter of that original fully-broken chamfers 0.857mm/mm figure). Finding it
+present at statistically the same magnitude and the exact same location in both v7 and v8 is
+itself further, independent confirmation of byte-identity in this region, not a new problem —
+noted for completeness since I found it while specifically scrutinizing this exact boundary, not
+because it changes the pass/fail call.
+
+Result: PASS — the critical check. P3-and-above is confirmed geometrically unchanged (to
+within mesh-tessellation noise) across STEP parameters and mesh cross-sections, by four independent
+methods. The lid/plug fit-critical region is intact.
+
+## R84. Shoulder witness (P2) — radius and tangent confirmed matching the pre-accepted decision; one documentation-class discrepancy flagged (non-blocking)
+
+Fine-resolution (0.01-0.02mm) scan pinpointing the exact witness point:
+
+- Internal radius at Z_ext=112.5mm: 47.00015mm — matches the tasks pre-accepted "shallowed to
+  internal r 47.0mm" framing exactly, not specs.md section 4.2.3s originally-written 45.0mm target.
+  (For reference: v7s original pinch was r=42.42mm; the specs own "shallow" fallback direction
+  was toward r~47.5mm if the built cavity came back low — the as-built 47.0mm sits almost exactly
+  on that fallback trajectory, consistent with iterative volume tuning, though not itself
+  documented as such anywhere I could find in specs.md.)
+- Tangent slope: dr/dz = -0.4765 at z=112.5mm — matches the specs required -0.474 (~25.4deg from
+  vertical, matched to the P1-P3 chord direction) closely.
+- No sharp kink (G0/G1 break) found: dr/dz transitions smoothly through the witness point on
+  both sides (-0.559 -> -0.521 -> -0.499 -> -0.479 -> -0.476 -> -0.477 -> -0.476 -> -0.459, sampled at
+  0.5-2mm steps from z=110 to z=118) — no discontinuous jump anywhere near this point, unlike the
+  genuine jump found at P3 (R83).
+
+One discrepancy flagged, not blocking: the body 3MFs own metadata Description field (see R86)
+explicitly self-describes this feature as a "G1 witness" — but specs.md section 4.2.3 explicitly
+requires "G2 (curvature-continuous)" at this point ("matched on both sides, G2 (curvature-
+continuous)... no kink"). I could not independently confirm or refute true G1-vs-G2
+continuity from the mesh alone — second-derivative (d2r/dz2) estimates from a triangulated STL
+are too noise-dominated at this resolution to reliably distinguish "tangent-matched only" from
+"curvature-matched," and Im not asserting a defect I cant actually measure. What I can say:
+no visible/measurable slope discontinuity exists here (the smoothness that would fail under either
+G1 or G2 is absent), so this is, at most, a documentation-accuracy gap between what specs.md
+requires and what the models own metadata says was built — not a demonstrated visible defect.
+Unlike the radius value (45mm->47mm), this specific downgrade (G2->G1) was not named in this
+tasks pre-accepted-decisions list. Recommend: specs.md/parameters.md be corrected to record
+both the as-built radius (47.0mm, already covered) and the as-built continuity class (G1, per
+the models own record) rather than leaving the G2 requirement standing as if fully met.
+Flagged per this projects standing practice of not letting a spec-vs-built mismatch pass silently
+— not a re-build trigger.
+
+Result: PASS on the functionally load-bearing parts (radius matches the accepted decision,
+tangent matches spec, no kink found); documentation note on the continuity-class claim.
+
+## R85. Print orientation / overhang re-check — PASS, matches the Coders figures closely
+
+- Base-to-belly flare (z~7-69mm, the classic "growing cone" overhang-relevant direction): peak
+  angle from vertical 34.54deg at z=22.52mm — matches the Coders reported "max 34.58deg @ z26.5"
+  closely (small difference attributable to sampling grid/method, not a real discrepancy).
+  Comfortably under the 45deg guideline; confirmed self-supporting.
+- Belly-to-shoulder-witness-to-P3 (z~69-138.5mm): confirmed monotonically non-increasing in radius
+  across the full span (isolated <=0.01mm non-monotonic samples right at the belly-apex turning
+  point itself are a sampling artifact at the exact peak, not a real reversal) — the
+  "shrinking-radius, self-supporting regardless of local angle" class, unaffected by the locally
+  steep -46deg angle found at z~95-96mm (R82).
+- R7 external foot-fillet underside: the near-horizontal (>45deg-from-vertical) span runs from
+  z=0 to where the local angle crosses 45deg-from-horizontal, interpolated at z~2.16mm (between
+  the z=2.02mm sample at 43.1deg and the z=2.52mm sample at 49.8deg from horizontal). This is in the
+  same small-and-routine ballpark as, though somewhat larger than, both the Coders reported
+  ~1.90mm and the specs own theoretical R*(1-cos45deg)=2.05mm estimate for an idealized tangent
+  case — all three describe the same "a few bridged layers at the very base edge, minor cosmetic
+  sag at worst" outcome, not a functional concern regardless of which sub-2.2mm figure is used.
+- Neck-to-collar blend peak overhang: 45.48-45.49deg (R83) — unchanged from v7, still in the
+  previously-accepted "marginal, continuously curved, fine with adequate cooling" category.
+
+Result: PASS on every sub-item, all closely matching the Coders independently-reported figures.
+
+## R86. Lid and neck-fit-test confirmed genuinely untouched; body 3MF metadata refresh confirmed as claimed
+
+Stronger than a timestamp check: git status --porcelain against the last commit
+(1aeba56, "Update Large through v7...") shows zero diff for step/urn-lid.step,
+3mf/urn-lid.3mf, stl/urn-lid.stl, step/neck-fit-test.step, 3mf/neck-fit-test.3mf, and
+stl/neck-fit-test.stl — only urn-body.{step,3mf,stl} show as modified. Git compares actual
+content hashes against the committed tree, which is a more decisive check than filesystem
+timestamps alone (a file could be touched without its content changing, or vice versa on some
+filesystems) — this confirms the lid and fit-test files are byte-identical to the last commit,
+not merely "old-looking."
+
+Timestamps corroborate independently: urn-lid.* dated Sep 2 17:32; neck-fit-test.* dated Aug
+31 08:27 — both predate the body rebuild (Sep 10 18:03-18:07) by more than a week, consistent with
+"never touched this round."
+
+Body 3MF metadata refresh — confirmed present and accurate, not just claimed. Read the actual
+metadata Description field from 3mf/urn-body.3mf; it now reads (excerpt): "...pet-
+memorial-urn LARGE body, spec v8 (rounder thrown-ceramic profile, 2026-09-10). Belly max OD
+153.93mm at Z~69; overall height 153.5mm; base contact OD ~89mm (R7 rounded foot); nominal wall
+4.0mm radial (min perpendicular ~2.78mm on the steepest shoulder section)...shoulder tangent-break
+removed to a G1 witness (internal r 47.0mm at Z 112.5), foot eased with an R7 external / R5
+internal fillet...Neck ID 80mm / collar OD 100mm / 10mm collar band / bore / P3->P4 blend are
+byte-identical to v7..." — this is a genuine, substantive content refresh (not a stale v2-era
+log), matches the actual measured geometry (R76-R85 above independently corroborate essentially
+every figure quoted in it, including the "G1 witness" language flagged in R84), and is exactly the
+kind of metadata-only change the task said to expect and not treat as a geometry change.
+
+Result: PASS on both sub-items — lid/fit-test confirmed untouched by the most decisive method
+available (content-hash diff via git, not just timestamps), and the metadata refresh independently
+verified accurate to the real geometry.
+
+## R87. Standing item restated, not re-litigated
+
+The 80mm neck ID remains ESTIMATED/untested against a real crematorium remains bag, gated behind
+the physical neck-fit-test print (specs.md section 4.4/section 10 edge case 2). Unaffected by this v8
+rebuild — confirmed directly in R83/R86 that the neck/bore/collar region is geometrically
+unchanged and that neck-fit-test.* was not touched. This is not a new gate on the v8 revision
+specifically; it is the same pre-existing open item this project has carried and restated since
+the v5 neck-widening, and it still requires the requesters own physical test (or explicit written
+risk acceptance) before being called closed.

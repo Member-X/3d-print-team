@@ -1,0 +1,36 @@
+# halloween-cat v2 materials (spec section 9 viewport colours, sRGB)
+
+newmtl black
+Ka 0 0 0
+Kd 0.066667 0.066667 0.066667
+Ks 0 0 0
+d 1
+illum 1
+
+newmtl orange
+Ka 0 0 0
+Kd 1.000000 0.415686 0.000000
+Ks 0 0 0
+d 1
+illum 1
+
+newmtl yellow
+Ka 0 0 0
+Kd 1.000000 0.878431 0.101961
+Ks 0 0 0
+d 1
+illum 1
+
+newmtl green
+Ka 0 0 0
+Kd 0.180392 0.545098 0.180392
+Ks 0 0 0
+d 1
+illum 1
+
+newmtl pink
+Ka 0 0 0
+Kd 1.000000 0.435294 0.639216
+Ks 0 0 0
+d 1
+illum 1

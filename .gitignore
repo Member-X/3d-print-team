@@ -6,3 +6,11 @@ __pycache__/
 # OS/editor cruft
 .DS_Store
 Thumbs.db
+
+# WSHobson-Agents on-demand cache (see .claude/agents/3d-director.md)
+.claude/hobson/cache/
+
+# Blender auto-backups and local-only snapshots (too large for GitHub)
+*.blend1
+halloween-cats/blender/versions/
+scratchpad/

@@ -1,0 +1,6 @@
+jason-candle-holder/stl/jason-candle-holder-v2.stl filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+cat-bowl/stl/sleeping-cat-bowl.stl filter=lfs diff=lfs merge=lfs -text
+halloween-cats/stl/halloween-cat_black.stl filter=lfs diff=lfs merge=lfs -text
+halloween-cats/stl/halloween-cat_combined.stl filter=lfs diff=lfs merge=lfs -text
+jason-candle-holder/jason-candle-holder-wip.stl filter=lfs diff=lfs merge=lfs -text

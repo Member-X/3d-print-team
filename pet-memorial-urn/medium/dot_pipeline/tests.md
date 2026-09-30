@@ -522,3 +522,349 @@ fillet) the revision note describes.
 **This re-test does not change the project's overall blocking status.** The §4.3 neck-ID
 `ESTIMATED`-dimension-mating-real-hardware item (tests.md §11, verdict.md item 1) remains open and
 is entirely unrelated to this fix — this pass only confirms the brim-tolerance fix itself is sound.
+
+---
+---
+
+# RE-TEST PASS — v2 Body-Profile Revision ("Thrown-Ceramic" Rounder Silhouette), Independent Verification (2026-09-11)
+
+**Cold start, independent verification.** Scope: the Medium body (`urn-body-medium.step/.3mf/.stl`)
+was rebuilt to a rounder profile below P3 per `specs.md` §4.7 (v2, 2026-09-10). Lid, plug, and
+`neck-fit-test-medium` are out of scope for this revision (not touched). All numbers below were
+measured independently — not read from the Coder's report or the spec's own claims — via:
+
+- **STEP entity/topology parsing**: a custom Python regex-based STEP reader resolving
+  `CARTESIAN_POINT`, `CYLINDRICAL_SURFACE`, `TOROIDAL_SURFACE`, and `B_SPLINE_CURVE_WITH_KNOTS`
+  entities directly (including tracing each Bezier segment's raw control points and axis
+  placements) — this is the authoritative, tessellation-free source of truth used for the
+  highest-stakes checks below (G1 tangency, fillet radii/tangency, P3-and-above identity).
+- **STL/3MF mesh analysis** (trimesh): watertightness, winding, Euler characteristic, and ordered
+  closed-loop cross-section slicing (`mesh.section(...).discrete`, not shapely polygon-hole area
+  alone) for exact inner/outer radius extraction at fine z-resolution.
+- **`git diff`/timestamp/md5 audit** for the "lid and neck-fit-test untouched" claim.
+
+The live Fusion document was not relied upon (same constraint as prior passes). Findings were
+cross-checked against the archived pre-v2 body at `medium/archive/pre-v2-rounder-body/`, which was
+first confirmed to be a faithful, untampered copy of the git-committed v1 body (STL/3MF md5 match
+the git HEAD blob exactly; STEP md5 matches the md5 the *original* Tester pass recorded for the body
+in RT-4 above, `5b5bb6a7c297e1ec5729e8b66880d7ca`, exactly).
+
+## RT2-0. Files actually changed — confirmed via git, independent of the Coder's own claim
+
+`git status`/`git diff --stat` against `HEAD` shows **only** `step/urn-body-medium.step`,
+`3mf/urn-body-medium.3mf`, `stl/urn-body-medium.stl` modified under `medium/`. `git diff --stat
+HEAD` for `urn-lid-medium.{step,3mf,stl}` and `neck-fit-test-medium.{step,3mf,stl}` is **empty** —
+confirmed byte-identical to the last commit. (Raw `md5sum` of `git show HEAD:<file>` vs. the
+working-tree file initially appeared to mismatch for these text-based STEP files; traced this to
+`core.autocrlf=true` normalizing line endings on checkout — `git diff` correctly reports no content
+change, and this was confirmed directly by observing the working file has CRLF terminators while
+the git blob has LF, with otherwise identical content.) File timestamps corroborate independently:
+body files timestamped 2026-09-10 12:52; lid and neck-fit-test files remain at their pre-existing
+2026-09-09 15:07 / 21:43 timestamps — unchanged, and predating this revision entirely.
+
+**Item 11: PASS.**
+
+## RT2-1. Manifold validity — single valid solid, watertight, 0 non-manifold edges, V−E+F=2
+
+| Check | STL | 3MF |
+|---|---|---|
+| Watertight | True | True |
+| Winding consistent | True | True |
+| Connected components | 1 | 1 |
+| Vertices / unique Edges / Faces | 56,158 / 168,468 / 112,312 | 56,158 / 168,468 / 112,312 |
+| V − E + F | **2** | **2** |
+| Non-manifold edges (shared by ≠2 faces) | **0** (all edges shared by exactly 2 faces) | **0** |
+| Degenerate (zero-area) faces | 0 | — |
+| STL vs. 3MF volume agreement | 180,831.5221 mm³ vs. 180,831.5219 mm³ (agree to 5×10⁻⁷ %) | |
+
+STEP: single `MANIFOLD_SOLID_BREP('Body1')`, single `CLOSED_SHELL`. (STEP's *raw entity* counts —
+15 `ADVANCED_FACE` / 29 `EDGE_CURVE` / 17 `VERTEX_POINT`, giving V−E+F=3 by naive entity count —
+repeat the same seam-edge double-counting artifact the original Tester pass already documented and
+ruled non-defective for v1's STEP export in RT-3 above; the mesh-level check is the authoritative
+one for this specific question and is clean in both formats.)
+
+**Item 1: PASS.**
+
+## RT2-2. Cavity volume — measured independently; genuinely inside the tolerance band, not clipping it
+
+Method: ordered closed-loop cross-section extraction (not polygon-triangulation) at 0.1mm
+z-resolution across the full 0–131mm height, integrating the interior-loop (cavity) area via the
+trapezoidal rule.
+
+```
+Measured cavity volume (this pass) = 844.31 cm³
+Cross-check (revolved-envelope volume − material shell volume) = 844.16 cm³
+Coder reported: 844.703 cm³
+Target: 819.4 cm³  |  Band (±5%): 778.4 – 860.3 cm³
+Deviation vs. target: +3.04% (Coder: +3.09%)
+Margin remaining to the ceiling: 860.3 − 844.31 = 16.0 cm³ (1.96%)
+```
+
+**Methodology validated before trusting it on v2**: the same script measured the archived v1 body's
+cavity at **805.91 cm³**, landing neatly between the original Tester's 806.1 cm³ and the Reviewer's
+805.30 cm³ — two independent prior passes, different toolchains, and this pass's own method all
+converge to within 0.8 cm³ of each other on the *same known geometry*, which is strong evidence the
+method is trustworthy before applying it to the new v2 numbers.
+
+**Confirmed genuinely inside the band, not near-clipping it** — three independent measurements of
+v2 (cross-section integration, envelope-minus-material, and the Coder's own CAD mass-properties)
+agree to within 0.4 cm³ / 0.05% of each other, and sit comfortably (~2% margin) below the 860.3 cm³
+ceiling.
+
+**Item 2: PASS.**
+
+## RT2-3. Base OD = 88mm, unchanged from v1; exact parity with collar OD
+
+Direct from the STEP B-rep (not mesh-approximated): a `CYLINDRICAL_SURFACE` entity with radius
+**44.0mm exactly** is used by a real, bounded `ADVANCED_FACE` (#203) spanning a genuine flat
+vertical cylindrical wall from z≈6mm (top of the R6 foot fillet) to z≈10mm (start of the
+belly-ward spline) — a true, if short (~4mm-tall), flat-walled base band at exactly 88.000mm OD,
+not merely a fleeting tangent point. Mesh cross-section independently confirms this flat band
+(r=44.0000mm exactly at every sample z=6.5–9.5mm).
+
+Collar OD: the rim (P4, z=131mm) `CARTESIAN_POINT` literal is **r=44.0000mm exactly** — the *same*
+numeric value as the base, both ultimately traceable to `44.` literals in the STEP file (base via
+the cylindrical surface, collar via the spline's terminal control point).
+
+**Base OD = Collar OD = 88.000mm, exact parity, unchanged from v1** — confirmed both by direct STEP
+literal comparison and by mesh measurement (base 88.000mm flat over a real ~4mm band; collar
+87.996–88.000mm, mesh-tessellation-limited on the curved terminal edge, with the exact analytic
+value at the rim vertex itself being 44.0000mm).
+
+**Item 3: PASS.**
+
+## RT2-4. Belly max OD = 120.4mm, single apex, zero overshoot
+
+Full-height fine scan (0.1mm z-resolution, entire 0–131mm height): peak outer radius =
+**60.1995mm (OD 120.399mm)** at z=59.05mm. **Zero samples anywhere in the full profile exceed
+60.200mm** (max recorded excess across the entire height: −0.0005mm, i.e., it never exceeds the
+target). Belly ovality (max−min radius at the apex ring): 0.0023mm — effectively perfectly round;
+mesh volumetric centroid confirms the revolve axis is centered at (x,y) ≈ (−0.0004mm, −0.0008mm).
+
+Direct from STEP: the Bezier control point shared between the two adjoining profile segments sits
+at exactly **r=60.2000, z=59.0000**, with the tangent handle on *both* adjoining curves purely
+vertical (dr/dz=0 on both sides — handle magnitudes 22mm down / 13mm up, matching the spec's own
+stated handle lengths exactly). This is architecturally a genuine single apex, not a plateau with a
+hidden secondary maximum elsewhere in either adjoining Bezier segment (confirmed empirically by the
+zero-overshoot full-height scan above).
+
+**Item 4: PASS**, with the belly reading as a smooth, gently rounded ~2.5mm-tall near-flat crown
+(within 0.02mm of true peak across z=57.75–60.25mm) rather than a mathematically sharp point —
+consistent with the spec's own "broad swell, not a point" design intent.
+
+## RT2-5. Shoulder (P2) — tangent-continuous (G1), no kink — confirmed at the Bezier control-point level, not merely by mesh smoothness
+
+This is the most rigorous check performed this pass: the raw cubic Bezier control points for all
+six profile curves were extracted directly from the STEP file (not mesh-derived) and tangent-vector
+collinearity was checked at every internal junction (P0, P1, P2, P3).
+
+**At P2 (external, r=50.7mm, z=84mm):** incoming tangent vector (from the belly-side curve) =
+(−3.9642, 11.3262); outgoing tangent vector (toward the neck-taper) = (−5.2856, 15.1016). Component
+ratios: −3.9642/−5.2856 = 0.75005, 11.3262/15.1016 = 0.75004 — **collinear to 5 significant
+figures**, i.e., genuinely tangent-continuous, not merely "visually smooth." Slope at the junction:
+dr/dz = −0.3500 → 19.29° from vertical, matching the spec's claimed "dr/dz = −0.35 (≈19° from
+vertical)" essentially exactly. The mirror check on the internal profile at P2 gives the same
+result (ratios 1.33333 / 1.33333 — the exact reciprocal, as expected for the internal-offset curve).
+
+**At P1 (both external r=60.2mm and internal r=57.0mm, z=59mm):** tangent handles are purely
+vertical on both adjoining curves (dr/dz=0), confirming smooth tangency there too, with handle
+magnitudes (22mm down/13mm up, both internal and external) matching the spec's stated values
+exactly.
+
+**No kink found anywhere.** Mesh-derived dr/dz across the shoulder region (z=74–90mm, 1mm sampling)
+also changes smoothly and monotonically in magnitude through the junction, with no discontinuous
+jump — corroborating the control-point-level finding independently. Per the task brief, literal G2
+(curvature-magnitude match, not just tangent-direction match) was already explicitly accepted as
+not required/achievable here — **G1 is confirmed, rigorously, at the source-geometry level, which
+is a stronger check than the mesh-smoothness confirmation alone would have been.**
+
+**Item 5: PASS.**
+
+## RT2-6. Foot fillets — R6 external / R4 internal, confirmed as real, tangent torus faces at the STEP entity level
+
+Direct from STEP: exactly two `TOROIDAL_SURFACE` entities exist in the entire file (no more, no
+fewer):
+
+| Entity | Major radius | Minor radius | Axis origin (z) | Tangent-to-flat at | Tangent-to-wall at |
+|---|---|---|---|---|---|
+| `#197` (external foot) | 38mm | **6.0mm** | z=6 | z=0, r=38 (flat underside) | z=6, r=44 (=external wall cylinder `#40`, r=44 exactly — major+minor=44 confirms tangency) |
+| `#196` (internal floor-to-wall) | 33mm | **4.0mm** | z=8 | z=4, r=33 (internal floor top, matching the unchanged 4mm floor thickness) | z=8, r=37 (=internal wall cylinder `#39`, r=37 exactly — major+minor=37 confirms tangency) |
+
+Both are real, bounded `ADVANCED_FACE` entities in the B-rep (not chamfers or cosmetic
+approximations), and both are **analytically tangent** — major+minor radius equals the adjoining
+cylindrical wall's radius exactly, in both cases, confirming genuine G1 tangency at both ends of
+each fillet directly from the CAD kernel data, with zero mesh-tessellation involved.
+
+**Item 6: PASS**, at the highest available level of rigor.
+
+**Disclosed consequence, independently confirmed:** the flat ground-contact disk shrinks to
+**exactly r=38.000mm (76.000mm diameter)** at z=0.0 (mesh cross-section confirms a single filled
+loop with no interior hole — a genuine solid disk, not a ring) — matching the spec's disclosed
+"≈76mm diameter" figure exactly.
+
+## RT2-7. Overall height = 131mm exact
+
+Mesh z-bounds: **0.000000mm to 131.000000mm** exactly, for both STL and 3MF. Corroborated at the
+STEP level: `CARTESIAN_POINT` entities exist at z=0.0 (base) and z=131.0 (rim) in both v1 and v2.
+
+**Item 7: PASS, exact.**
+
+## RT2-8. Wall thickness — nominal 3.2mm radial confirmed; perpendicular minimum independently confirmed at ~2.71mm, not below the 0.8mm floor
+
+**Radial wall** (outer_r − inner_r), sampled every 4mm from z=8mm to z=118mm (spanning the entire
+reshaped span): holds at **3.20mm ± 0.01mm** throughout (min 3.1961mm @ z=63.85mm — matching the
+spec's own "offset inward 3.2mm" construction instruction). No location radially thinner than spec
+anywhere in the reshaped span.
+
+**Perpendicular (true wall-normal) thickness** — computed independently via 2D profile-normal
+ray-casting from the inner surface to the outer surface (a distinct, more rigorous method than
+radial×cos(angle), though the two agree): global minimum = **2.7107mm at z=73.5mm** (the steepest
+section, belly-to-shoulder transition). This is the same physical location and essentially the same
+value the Coder reported (**~2.71mm @ z~75mm** — a 1.5mm z-offset and <0.002mm thickness difference,
+within method/sampling-resolution noise). **Confirmed: not worse than reported, and 2.71mm / 0.8mm
+floor = a 3.4× margin — comfortably clear of the floor.**
+
+I also explicitly checked the P3→P4 collar-blend band (z=119–131mm, where radial wall grows from
+3.2mm to 8mm while the outer slope simultaneously steepens toward ~44.5°) for a hidden worse
+minimum there, since a steep slope reduces perpendicular thickness relative to radial: perpendicular
+thickness in that band ranges from ~3.2mm (at P3, near-zero slope) up to ~4.0mm (at the steepest
+point, z≈125mm) — **no location anywhere in the body drops below the 2.71mm minimum already
+identified in the belly-shoulder span.**
+
+**Item 8: PASS.**
+
+## RT2-9. P3-and-above byte-identical to v1 — confirmed at the STEP literal level, not just "close" by mesh comparison
+
+**Strongest available check:** every `CARTESIAN_POINT` in both the current v2 STEP and the archived
+v1 STEP whose z-coordinate equals 119.0 (P3) or 131.0 (P4/rim) was extracted, and the *set* of
+radii present at each height compared:
+
+```
+z=119.0 (P3):  v2 radii = {0.0, 36.0, 39.2, 50.91169, 55.43717}
+               v1 radii = {0.0, 36.0, 39.2, 50.91169, 55.43717}   — IDENTICAL SET
+z=131.0 (P4):  v2 radii = {0.0, 36.0, 44.0, 62.2254}
+               v1 radii = {0.0, 36.0, 44.0, 62.2254}              — IDENTICAL SET
+```
+
+This is exact, to the literal decimal values stored in each STEP file — not a mesh-tessellation-
+limited approximation. `CYLINDRICAL_SURFACE` radii (36mm bore, 44mm collar OD) and the neck-OD
+`CIRCLE` radius (39.2mm) are present identically in both files. By contrast, the two files'
+*shoulder*-region circle radii genuinely differ, as expected (v1: 47.0/50.2mm; v2: 47.5/50.7mm —
+matching the spec's described P2 witness-point change exactly), confirming this comparison isn't a
+trivial "everything's the same file" false-positive — the tooling correctly distinguishes real
+changes (below P3) from true identity (at/above P3).
+
+Mesh cross-section comparison (v2 vs. archived v1) corroborates: at z=119mm the two meshes agree to
+the displayed precision (0.0000mm difference, both outer and inner radius); across the whole
+z=119–131mm band all residual differences are ≤18 microns (consistent with the two STL exports
+using different facet counts — v2's mesh has 2.2× the vertex density of v1's archived mesh —
+approximating the *same* underlying analytic curve slightly differently, not a real geometric
+change). By contrast, below P3 (checked at z=70–118mm) the two meshes diverge by up to several
+millimeters — confirming these are genuinely different builds below P3 and genuinely identical
+at/above it, not a coincidental near-match.
+
+**Item 9: PASS, at the highest available level of rigor** (source-geometry literal match, not just
+mesh-noise-level agreement).
+
+Neck OD at P3 = 78.4mm (r=39.2, confirmed identical in both v1/v2), collar bore ID = 72mm (r=36,
+confirmed identical in both, and the *same single* `CYLINDRICAL_SURFACE` entity spans the full
+P3→P4 bore in each file), collar OD = 88mm (r=44, confirmed identical in both) — **all unchanged,
+exactly.**
+
+## RT2-10. Print orientation, overhang — base down (Z=0) confirmed; faired lower-body and foot-fillet overhangs independently confirmed, and one new risk quantified
+
+- **Base at Z=0, flat:** confirmed (mesh z-min = 0.000000mm; the z=0 cross-section is a single
+  filled disk with no hole — flat, bed-ready).
+- **Faired lower body (v2's new rounder flare, base→belly):** peak local overhang angle =
+  **27.39° from vertical at z=27.5mm** (independent fine-resolution measurement, 0.25mm z-steps) —
+  matches the Coder's reported **~27.4°** essentially exactly. Comfortably under the 45° guideline,
+  self-supporting. **Confirmed not worse than reported.** Worth naming plainly, though: this is
+  nearly double v1's equivalent transition (~16.4° per the original v1 spec table) — a real,
+  disclosed consequence of the rounder profile, still safe, but a legitimate step up in overhang
+  risk on this surface, not a zero-cost change.
+- **R6 foot-fillet underside:** solved analytically from the confirmed-exact torus geometry
+  (tangent points (r=38,z=0) and (r=44,z=6), R=6): the 45°-from-vertical crossing occurs at
+  **z = 6 − 6·cos(45°) = 1.757mm**. This closed-form result matches the Coder's reported "~1.76mm
+  below 45°" to 3 significant figures — the strongest possible confirmation available (exact
+  geometry, not a discretized approximation). This ~1.8mm-tall band sits right at the build plate
+  (within the first several layers) — routine for a rounded base edge, non-blocking.
+- **Neck-to-collar external blend (unaffected by v2, re-confirmed unchanged):** peak angle measured
+  independently at 44.55–44.98° depending on sampling method (matches the original Tester's
+  previously-verified 44.98° for this same, untouched geometry, §1 above) — **at, not clearly over,
+  the 45° guideline, exactly as already established and re-confirmed, not newly introduced by this
+  revision.**
+
+**Item 10: PASS**, with the lower-body overhang increase (16.4°→27.4°) named as a real, quantified,
+non-blocking consequence of the rounder profile.
+
+**Additional, value-add check (not explicitly requested, but directly relevant to whether the
+disclosed footprint-narrowing consequence in RT2-6 introduces a real stability concern):**
+approximate tip-over angle, computed from each body's actual volumetric center of mass (shell-only,
+`trimesh.center_mass`, uniform-density assumption) and its flat-contact radius:
+
+```
+v2: CoM z=52.71mm, contact r=38.0mm  → approx. tip angle = atan(38.0/52.71) = 35.8°
+v1: CoM z=52.08mm, contact r=44.0mm  → approx. tip angle = atan(44.0/52.08) = 40.2°
+```
+
+The R6 foot fillet's contact-ring reduction does cost ~4.4° of tip-stability margin, exactly as the
+spec's own qualitative "still stable" claim implied but did not quantify. **35.8° remains a
+substantial margin for ordinary handling/accidental-knock scenarios — not a functional concern —
+but this is now a concrete, independently-derived number rather than an unverified assertion.**
+
+## RT2-11. `neck-fit-test-medium` and `urn-lid-medium` — confirmed untouched
+
+Restated here against the numbered checklist for completeness (full audit in RT2-0): `git diff`,
+file timestamps, and md5 (for the binary, tessellation-insensitive STL format) all independently
+agree these six files are unmodified by this revision.
+
+**Item 11: PASS.**
+
+## RT2-12. Standing risk — restated, not re-litigated
+
+**The 72mm neck/collar ID (`specs.md` §4.3) remains `ESTIMATED` and untested against a real
+medium-pet remains bag.** This is unchanged and unaffected by the v2 body-profile revision — the
+revision only touches geometry below P3, and P3-and-above (which includes the entire neck/collar)
+is confirmed byte-identical to v1 at the STEP-literal level (RT2-9). This remains the single
+highest-priority open item across this entire size, per the original Tester and Reviewer passes,
+gated behind a physical `neck-fit-test-medium` print-and-bag-test or explicit written risk
+acceptance from the requester — **not something this or any CAD revision can resolve, and this
+pass does not attempt to.**
+
+## RT2 Slicer check
+
+No slicer CLI (PrusaSlicer/Cura/OrcaSlicer/Slic3r) was found in this environment — the same
+limitation as the original pass. Substituted with direct geometric overhang analysis (RT2-10),
+which for the specific overhang-*angle* question is at least as precise as a slicer's default 45°
+auto-support heuristic. Recommend an actual slicer preview pass before committing to a production
+print run, specifically on the new faired lower-body region (27.4° peak) and the foot fillet, to
+visually confirm print *quality* (layer stepping on the now-more-curved lower body) rather than
+support necessity — both angles are safely under 45° and should not trigger auto-supports.
+
+---
+
+## RE-TEST SUMMARY — v2 Body-Profile Revision
+
+| Item | Check | Result |
+|---|---|---|
+| 1 | Single valid manifold solid, watertight, 0 non-manifold edges, V−E+F=2 (STEP/3MF/STL) | PASS |
+| 2 | Cavity volume ≈844.3 cm³ (Coder: 844.703), target 819.4, band 778.4–860.3 | PASS — genuinely in band, independently corroborated 3 ways |
+| 3 | Base OD = 88mm, unchanged; parity with collar OD (also 88mm) | PASS — same literal 44mm value at the STEP entity level |
+| 4 | Belly max OD = 120.4mm, single point, zero overshoot | PASS — 0 samples exceed 60.2mm anywhere in the full profile |
+| 5 | Shoulder tangent-continuous (G1), no kink | PASS — confirmed via Bezier control-point tangent-vector collinearity (5 sig. figs.) |
+| 6 | Foot fillets R6 ext / R4 int, real torus faces, tangent | PASS — confirmed via STEP `TOROIDAL_SURFACE` entities, analytic tangency verified |
+| 7 | Overall height = 131mm exact | PASS |
+| 8 | Nominal wall 3.2mm radial; perpendicular min ~2.71mm, not below 0.8mm floor | PASS — independently measured 2.7107mm @ z=73.5mm, matches Coder's report |
+| 9 | P3-and-above byte-identical to v1 | PASS — identical STEP literal radii at z=119 and z=131 |
+| 10 | Print orientation base-down; overhangs (faired lower body ~27.4°, foot fillet ~1.76mm<45°) | PASS — both independently confirmed/derived; lower-body overhang increase vs. v1 named plainly |
+| 11 | Lid / neck-fit-test files not modified | PASS — `git diff` empty, timestamps and md5 unchanged |
+| 12 | 72mm neck-ID standing risk | Restated, unresolved, unaffected by this revision — not re-litigated |
+
+**This re-test pass: PASS.** The v2 body-profile revision is a clean, accurately-executed
+implementation of `specs.md` §4.7, verified independently at the STEP-entity level wherever possible
+(not just mesh approximation) for the highest-stakes claims (G1 tangency, fillet radii/tangency,
+P3-and-above identity). No modeling defect found.
+
+**This does not change the project's standing BLOCKED-for-production status.** The unresolved §4.3
+neck-ID item (RT2-12) is untouched by this revision and remains the gating item before a full
+production print, exactly as before this revision.

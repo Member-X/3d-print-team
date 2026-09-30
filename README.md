@@ -76,6 +76,18 @@ automation tools (`preview_start`, `navigate`, `computer`, `read_page`, `find`, 
 2026-08-25) to silently block synthetic keyboard input, so this agent defaults to direct URL
 navigation + `WebSearch` rather than repeatedly attempting the live autocomplete sweep.
 
+### listing-syndicator
+**Role:** the downstream half of the pipeline — once a product is live on Etsy, it reads the Etsy
+listing and promotes it: Pinterest pins, then an eBay listing. Works in phases (extract, pinterest,
+ebay), drives the browser pane, and **stops before every publish** with a ready-for-approval report;
+the user's yes is required each time. It never enters passwords or clears bot checks (the user does),
+and it asks for missing facts (packed weight/size, material) instead of guessing. Shop-wide settings
+live in `syndication/defaults.md`; what is posted where lives in `syndication/log.md`.
+**Tools/services:** `Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`, and the built-in browser
+(`preview_start`, `navigate`, `computer`, `read_page`, `find`, `form_input`, `get_page_text`,
+`javascript_tool`, `browser_batch`, tab tools). Limits: the browser pane cannot upload files, so real
+photos are saved to `<project>/ebay-photos/` for the user to drag into eBay.
+
 ## Supporting services (MCP servers)
 
 These aren't team members themselves — they're capabilities the agents above call into.
@@ -101,6 +113,15 @@ etsy-market-research  →  3d-director  →  [3d-concept-designer]  →  3d-plan
                                                                         ↓
                           3d-reviewer  ←  3d-tester  ←  3d-coder  ←────┘
 ```
+
+After a product is listed on Etsy, `listing-syndicator` takes over: `Etsy listing -> Pinterest pins ->
+eBay listing`, each publish gated on your approval:
+
+```
+Etsy listing URL  →  listing-syndicator  →  Pinterest pins  →  eBay listing
+```
+
+Example: *"Syndicate https://www.etsy.com/listing/... to Pinterest and eBay."*
 
 `3d-director` is the only agent you need to talk to directly for a build — it decides whether
 `3d-concept-designer` is needed (skipped if the idea is already fully specified) and drives the
@@ -154,6 +175,9 @@ Each product gets its own top-level folder (e.g. `noise-maker/`, `cat-toy-holder
 - `concept/` — visual concept images + brief, if `3d-concept-designer` was used
 - `README.md` — what the print is, for anyone who wasn't in the room when it was designed
 - `parameters.md` — enough dimensional/build detail to recreate the design from scratch
+
+`syndication/` holds the shop-wide posting settings (`defaults.md`) and a log of which product is on
+Etsy, Pinterest and eBay (`log.md`), used by `listing-syndicator`.
 
 `market-research/findings.md` is a standalone running log of `etsy-market-research` output, not
 tied to any one project.

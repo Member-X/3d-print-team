@@ -239,3 +239,137 @@ Moved directly to `WebSearch` + Etsy `search?q=` URL navigation.
 - [Pet Memorials Market Size and CAGR — EconMarketResearch](https://www.econmarketresearch.com/industry-report/pet-memorials-market)
 - [7 Pet Memorial Trends in 2026 — Pawtrove Feltever](https://pawtrovefeltever.com/blogs/pet-memorial-guides/7-pet-memorial-trends-in-2026-why-more-pet-owners-are-choosing-custom-pet-replicas)
 - [Foreverence Pets: 3D Printed Urns/Keepsakes — 3DPrint.com](https://3dprint.com/45593/foreverance-pets-3d-print-urn/)
+
+---
+
+## 2026-09-13 — Pet memorial urn silhouette research (competitive shape/family analysis, not a new-product screen)
+
+**Scope note:** this is a targeted comparison task, not the standard Phase-1/Phase-2 autocomplete sweep — invoked to check our in-progress `pet-memorial-urn` classic-vase design against the market. `pet-memorial-urn/` was read for context only (current spec: `dot_pipeline/specs.md` — Large tier, ~1579cm³ cavity, 153.5mm H, 153.9mm belly OD, dome-topped removable lid seated on a 100mm OD collar, rounded foot, no handle, no engraving area called out) — nothing in that directory was modified.
+
+**Method note:** per the known 2026-08-25 issue, Etsy's search-box autocomplete was tested once (typed "pet urn" into the live search box) and confirmed still non-functional — the dropdown stayed on the generic "Popular right now" list regardless of input. No CAPTCHA appeared. Fell back immediately to direct Etsy URL navigation (`etsy.com/search?q=...`, `etsy.com/c/...`, `etsy.com/shop/...`) plus WebSearch for trend/forum signal, exactly as prescribed. All review counts/dates below are from real listing and shop pages fetched this session, not estimates.
+
+### 1. Silhouette families found (with representative, cited listings)
+
+1. **Classic thrown-ceramic vase/jar urn with separate lid (dome, semi-spherical, or flat)** — this is our design's family. Examples: [BarruntandoCeramics — semi-spherical-cover dog urn](https://www.etsy.com/c/pet-supplies/urns-and-memorials/pet-urns) (9,505 reviews, $254.95); [vitrifiedstudio](https://www.etsy.com/shop/vitrifiedstudio) — simple tapered ceramic vase shape, sold as both pet and human/infant urns, 14 years on Etsy, 29,811 total sales, 8.8k shop reviews, sizes XXS–XL at $140–$350; "Stoneware custom pet urn" by claylicious, [listing](https://www.etsy.com/listing/1268257186/stoneware-custom-pet-urn) (9,498 reviews); AmanitaPottery — same base jar shape reused across floral/orange-cat/bunny variants (6,340 reviews each); [Weenielabpeturns](https://www.etsy.com) "minimal and elegant design, made in Italy" (Bestseller tag). A distinctive hybrid within this family: [SkyUrns](https://www.etsy.com/shop/SkyUrns) — bottom half is the ash chamber (filled via a bottom rubber plug, no top lid at all), top half is a real, usable flower vase, joined by a wood disk. 9 years on Etsy, 3,646 sales, 5.0★/1,108 reviews, reviews dated through **Sep 2026** (still actively selling), sustained $123.75–$165 price point.
+
+2. **Wood keepsake/memory box** (rectangular box, engraved-photo lid or inset photo tile) — by far the largest number of distinct competing shops: WagsandWillows ([shop](https://www.etsy.com/shop/WagsandWillows), flagship listing 9,844 reviews), plus a long tail — WoodHandicraftsStore, APEXCRAFTSIN, NashraCraft, EngravedBelovedImage, HarmonyHubGift, PiecesOfHearts, TreeTopUrns, Bharatwoodencrafts, WoodaynaKrafts, PurestShelter, MainelyUrns, TwistedBranchDesigns — clustered at $18–$95 (most $30–$50) with heavy 25–70%-off discount patterns typical of a commoditized segment.
+
+3. **Ceramic jar/urn with a sculpted pet figurine on the lid** (decorated variant of #1): [ThienCeramicArtShop](https://www.etsy.com/shop/ThienCeramicArtShop) "Handmade Memorial Urn with Dog/Cat Figurine" (Bestseller tag, only 1 year on Etsy but 2,091 sales / 4.9★ / 303 reviews already — fast-growing); HeartprintsbyPets (219 reviews, "Stone Finish Tribute"); PetPawsMemory (Bestseller tag).
+
+4. **Full pet-statue/sculpture urns** (entire body sculpted into a recognizable dog/cat pose): PulvisArtUrns "Custom Cat Statue Urn from Photo" ($522.03, bespoke pricing); CozbaySculptures "Sleeping Cat Shaped Ceramic Pet Urn"; StowMillsShop "Sleeping Tabby Cat Urn." Real family, but each is a one-off hand-sculpted commission.
+
+5. **Paw-print-engraved cylindrical canister, threaded screw-on lid**, slate/pewter finish: ["Paw Print Pet Cremation Urn, Slate Finish"](https://www.etsy.com/listing/1074466791/paw-print-pet-cremation-urn-slate-finish) (Small 6"/45cu·in, Medium 7"/85cu·in, Large 8.5"/115cu·in) and ["Classic Paw Print Pet Crimation Urn"](https://www.etsy.com/listing/798673528/classic-paw-print-pet-crimation-urn). The paw print is surface decoration on a plain tapered-cylinder body, not a body-shape feature.
+
+6. **Photo-frame/shadow-box hybrid**: LifeSongMilestones "UV-Printed Cremation Shadow Box Urn"; PawsPortraitsGoods "Personalized Metal Dog Urn... Custom 3D Pet Portrait" (Bestseller, $29.99) — metal box with an embossed photo relief.
+
+7. **Angel/religious motif** — present (CROSSBODYCASE "Angel Wings Pet Urn," $16) but no evidence of a major established shop in this style specifically; thin data.
+
+8. **Heart-shaped urns** — found almost entirely at jewelry/mini-keepsake scale (cremation pendants, palm-sized token-ash keepsakes: [heart_shaped_pet_urn market](https://www.etsy.com/market/heart_shaped_pet_urn)). The one full-capacity heart urn found, [Heart Shaped Pet Urn, Laser Engraved](https://www.etsy.com/listing/1372270586/heart-shaped-pet-urn-laser-engraved), caps at **22 lbs** — well under our 50–90lb target, suggesting the heart silhouette doesn't scale volume-efficiently to large-pet capacity.
+
+9. **Explicitly "3D printed"-labeled urns** — a small, low-price niche: TailoredPetGifts ($49.87), FoamyBloom ($75.99), CustomCharmLab ($42.49), VoxelForge3D-style listings (~$27–36 per [pawprintmemorials.com](https://pawprintmemorials.com/3d-printed-pet-urn-designs/)). No large review counts found for any of these — small/new shops, and prices sit well below the $88–$350 ceramic-vase range.
+
+10. **Geometric/faceted "modern decor" style** — searched for directly; no meaningful pet-urn-specific presence found (this trend shows up in general human-urn/home-decor searches, not pet urns specifically). Flagging as **unconfirmed**, not a real family here.
+
+### 2. Which families sell best / competition level
+
+- **Classic ceramic vase (#1) and wood box (#2) are the two dominant, highest-demand families** — both have flagship listings in the 8,000–10,000-review range, and review dates (checked directly on SkyUrns' shop page) run through **September 2026**, so demand is current, not historical residue.
+- **Nuance on #1:** Etsy's dedicated ["Pet Urns" category](https://www.etsy.com/c/pet-supplies/urns-and-memorials/pet-urns) shows only **286 total listings** — a fairly narrow, curated category, not "dozens of near-identical listings." But it's dominated by roughly half a dozen extremely established shops (vitrifiedstudio: 14yr/29.8k sales; claylicious; WagsandWillows; BarruntandoCeramics; AmanitaPottery; ZuzeCeramics; Crystallinekingdom) with hundreds-to-thousands of reviews each. That's "moderate listing count, very high incumbent trust" — different from, and arguably harder to break into than, a flooded low-quality category, because a new plain/undecorated entrant has no reviews to compete on trust.
+- **#2 (wood box) has a much longer tail of distinct sellers** at compressed prices with heavy blanket discounting — classic race-to-the-bottom signature. Worse opportunity despite decent demand.
+- **More promising, less crowded niches:**
+  - The **SkyUrns-style vase-hybrid** (#1 sub-variant) — only one major seller identified, sustained $123–165 pricing, still-current reviews.
+  - **Figurine-topped ceramic urn** (#3) — ThienCeramicArtShop is only 1 year old and already at 2,091 sales/Bestseller — shows room for new, well-differentiated entrants in this family.
+  - **Paw-print engraved plain-cylinder canister** (#5) — quieter niche, no mega-shop review counts found, simple non-photorealistic aesthetic.
+  - **Small-animal (rabbit/guinea pig/hamster) sizing** — same wood-box shape just relabeled/resized smaller; a capacity/marketing niche, not a new silhouette, but a real underserved tier if extending our line downward.
+  - **"3D printed"-labeled urns** — low review counts and low prices are a **caution flag**, not an opportunity: explicitly branding as "3D printed" currently reads as budget/commodity to buyers, capping price well below the ceramic ceiling.
+  - **Heart-shaped and full pet-statue families are effectively ruled out** for a 50–90lb design: hearts don't hold enough volume at that scale, and statue urns are a bespoke hand-sculpting business model.
+
+### 3. Recurring proportions/features
+
+- **Lid style:** dome/semi-spherical separate lid (matches ours) is common in the premium ceramic tier; flat lid with a figurine standing on it is very common; threaded screw-on lid shows up specifically on the paw-print metal/slate canister family; SkyUrns' bottom-plug (no top lid) is a rarer, differentiated alternative that also lets the object read as ordinary home decor rather than a funeral object.
+- **Base:** simple turned pedestal/foot ring across nearly every ceramic-family competitor — matches our existing rounded-foot approach; no trend toward unusual base treatments.
+- **Engraving/nameplate area:** essentially universal — a name+date engraving, inset plaque, or photo tile appears on nearly every top listing across every family. **Our current spec has none called out** — this reads as a real gap versus market baseline, not just a nice-to-have.
+- **Handles:** not observed on any pet-specific ceramic-vase competitor — confirms our no-handle choice is correct for this category.
+- **Size tiers / weight breakpoints:** the ~1 cubic inch of internal volume per pound of body weight convention (matching our own project's rule) recurs across listings. Common breakpoints seen: small ≤~20lb (40–50cu·in), medium ~20–50lb (75–85cu·in), large ~50–100+lb (110–115+cu·in) — closely matching our existing Small/Medium/Large tiering.
+- **Price points per tier:** ceramic-vase family ~$60–140 (small/medium) up to $140–$350 (large/premium, vitrifiedstudio's largest tier is $350); wood-box family $18–$95 (most $30–50); figurine-topped ceramic $60–$160; full statue sculptures $95–$520+ (bespoke); "3D printed"-labeled $27–$76.
+
+### 4. Printability notes per family
+
+- **Classic ceramic vase/dome-lid (our family):** geometrically fine on FDM (large-radius curves, no fine overhangs beyond the neck-to-collar transition already handled in the existing spec at ~47° — within printable range). **The real risk is surface finish, not geometry** — buyers here are conditioned to expect glazed/hand-painted ceramic texture; an unfinished PLA print will look visibly "printed" next to $88–$350 pottery competitors unless we budget for finishing (sanding, primer, paint, or a two-tone/silk filament) as a real cost/time line item.
+- **Wood box:** poor FDM match — competitors win specifically on real wood grain and laser-engraved photos, hard to replicate credibly in plastic without extra steps (wood-fill filament, actual laser engraving, inset photo panel). Already low-margin/high-competition regardless — not recommended.
+- **Figurine-topped urn:** vessel body is printable; the custom-sculpted figurine is the hard part (needs a photo-to-3D pipeline or a limited generic-breed library) — real labor/scalability cost for a solo shop.
+- **Full statue urns:** not realistic for a solo FDM shop at the hand-sculpted quality/personalization level these competitors deliver — out of scope.
+- **Paw-print threaded canister:** very FDM-friendly — plain body of revolution, printable threads (or heat-set insert), no fine overhangs, easy two-tone via a filament swap for the paw band.
+- **Vase-hybrid (SkyUrns-style):** printable as 2–3 separate simple parts, arguably *easier* than our current dome-lid design (no dome to support, bottom-plug access instead), and differentiates by not visually reading as an "urn."
+- **Heart/shadow-box hybrids:** geometrically fine but low priority — heart doesn't scale to our capacity target, shadow-box relies on inserted photo materials that add a manufacturing step beyond pure FDM output.
+
+### Handoff
+
+Core vase silhouette is validated, not disproven — no shape change forced. The clearest, lowest-effort gap versus market baseline is the missing engraving/nameplate area (near-universal across every competing family). Two adjacent ideas worth a decision before the next spec revision: the SkyUrns-style bottom-fill/open-top vase hybrid (simpler print, no dome overhang, only one major competitor), and a plainer engraved-band cylinder in the paw-print-canister style (plays to FDM's strengths instead of chasing a ceramic look). Heart-shaped and full-statue families are ruled out for the 50–90lb target. Next step once a direction is chosen: `3d-director` (or `3d-planner` directly) to fold the decision into the spec.
+
+### Sources
+- [Pet Urns category](https://www.etsy.com/c/pet-supplies/urns-and-memorials/pet-urns)
+- [SkyUrns shop](https://www.etsy.com/shop/SkyUrns)
+- [ThienCeramicArtShop](https://www.etsy.com/shop/ThienCeramicArtShop)
+- [vitrifiedstudio](https://www.etsy.com/shop/vitrifiedstudio)
+- [WagsandWillows](https://www.etsy.com/shop/WagsandWillows)
+- [Stoneware custom pet urn listing](https://www.etsy.com/listing/1268257186/stoneware-custom-pet-urn)
+- [Heart shaped pet urn market](https://www.etsy.com/market/heart_shaped_pet_urn)
+- [Heart Shaped Pet Urn (22lb) listing](https://www.etsy.com/listing/1372270586/heart-shaped-pet-urn-laser-engraved)
+- [Paw Print Pet Cremation Urn, Slate Finish](https://www.etsy.com/listing/1074466791/paw-print-pet-cremation-urn-slate-finish)
+- [Classic Paw Print Pet Cremation Urn](https://www.etsy.com/listing/798673528/classic-paw-print-pet-crimation-urn)
+- [3D Printed Pet Urn Designs — Paw Print Memorials](https://pawprintmemorials.com/3d-printed-pet-urn-designs/)
+- [3d printed pet urn market](https://www.etsy.com/market/3d_printed_pet_urn)
+- [Custom 3D Printed Pet Urn listing](https://www.etsy.com/listing/1879450771/custom-3d-printed-pet-urn-personalized)
+- [Pet Urn Market Size report](https://www.datainsightsmarket.com/reports/pet-urn-441268)
+
+## 2026-09-23 — eBay competitor check: Cat Wand Toy Holder
+
+**Method.** Own browser tab, URL navigation only (no Terapeak, no autocomplete), so none of this is search-volume data. eBay never showed a verification page. Tags: OBSERVED = seen on a page this session, INFERRED = judgment.
+
+**Verdict.** Niche is sparse, but demand is unproven.
+- OBSERVED: "cat wand holder" returns 15 active results: 7 fabric bags, 2 rigid holders (nxviii, Feline Ruff), the rest irrelevant.
+- OBSERVED: sold searches for 9 holder/organizer/storage phrasings returned zero relevant exact matches. Only holder-type sale found: one fabric hanging bag at $14.38 (tingfarm, Aug 9). Dozens of wand toys sold at $8-$25.
+- INFERRED: eBay buyers mostly buy wands, not storage; low competition probably reflects low demand.
+
+| Seller | Type | Price + ship = landed | Sold evidence |
+|---|---|---|---|
+| steveowensjr (reference) | 3D-printed, rigid, 7 slots | $49.99 + free = $49.99 | None (listed 9/23) |
+| nxviii (40 feedback) | Small white rigid holder, ~3 wands (3D-printed per a snippet, unverified) | $14.99 + $6.07 = $21.06 | None seen |
+| shloruzdealz613 | Feline Ruff, mass-produced tabletop, 4 slots (per Amazon/Chewy snippets) | $50.43 + free | None seen |
+| zonegood (841 feedback) | Hanging organizer, material unverified | $64 or Best Offer, free | None seen |
+| ZAVOOS / theatlassupplyco | Fabric 2-packs | $34-$49, free | None seen |
+| 5 sellers incl. TEMUORG, buyitshipping | Fabric bags | $11-$23, free | None seen |
+| tingfarm | Fabric hanging bag | $14.38, free | 1 sold (Aug 9) |
+
+**Price.** OBSERVED: $49.99 ranks 12th of 15 on lowest-landed sort; only Feline Ruff and zonegood cost more, neither shows sales. Highest sold holder-type price found: $14.38. INFERRED: $49.99 is untested on eBay; nearest rigid comparable asks $21 landed. Print time and eBay fees not checked.
+
+**Keywords.** Title 68/80 chars. Surfaces for "cat wand holder", "cat toy holder wall", "cat wand wall mount"; only loose matches for "3d printed cat wand" (title lacks "3D Printed"). eBay related searches: Wand Holder, Hanging Cat Toys, Wall Mounted Cat, Cat Holder.
+
+**Gaps.** 7 photos + Color dropdown; likely no dimension/keyhole/scale shot (INFERRED). Search results showed "0% positive (19)" and the listing "No feedback yet" (may be a display quirk). No returns vs several competitors offering free returns. eBay prompts for a seller profile photo. Fabric competitors have no rigid, colored or cat-silhouette angle.
+
+**Suggested changes, in order.**
+1. Title: "3D Printed Cat Wand Toy Holder Wall Mount Organizer 7 Slots Teaser Wand Storage" (79 chars).
+2. Price: test $39.99, or add Best Offer with a floor.
+3. Photos: dimension diagram (9.1 x 9.1 in), keyhole back, "7 wands loaded" shot.
+4. Item specifics: add Material (PLA), Color, Size.
+5. Trust: check feedback display in Seller Hub, add profile photo, consider accepting returns.
+
+**Could not verify.** Terapeak / 1-year sold volume and sold-window length; whether nxviii's holder is 3D printed and its sales; zonegood's material and Feline Ruff's eBay dimensions; competitors' photo counts; the user's description text (did not render); whether buyers actually see "0% positive".
+
+## 2026-09-23 — look-alike check: fish cat bowl
+
+**Verdict.** No finished, 3D-printed, fish-shaped fishbone bowl found on Etsy or eBay (OBSERVED: 4 Etsy and 5 eBay queries, no bot checks). Exact retail source of the reference photo unidentified. Generic fish bowls (ceramic, silicone) are crowded; the rigid fish + skeleton + eye niche looks thin.
+
+**Closest look-alikes.**
+- Etsy 4558355178 (mrar97): "Fish-Shaped Cat Food Bowl STL, Dual Compartment", a $3.70 digital file (PLA/PETG, personal-use licence), 3 shop sales, no reviews. Only direct concept match, and it is a file, not a product.
+- Fred/Howligans "Slow Food - Cat" (designer Lauren Hastings): molded PP, 7.6 x 4.4 x 1.3 in, 3/4 cup, $14.00 genuinefred.com (sold out) / $14.99 World of Mirth. Fish outline with raised bone; the blue photo shows no eye or head compartment.
+
+**Near matches.** Etsy printed PLA: BoltandBuild3D 4380425937 ($14 + $9.24 ship, 637 sales), Penn3DStore 4548634244 "Campfire Fish" ($29.99 + $15), LostTravelerLee3D 1798198920 ($24.99 free ship), PalmPrintz3D 4414276513 ($23.99 + $11.50). Etsy ceramic fishbone slow feeders $35-$110. eBay active: silicone fish slow-feeder 2-packs $13-$38 (often China-sourced), ceramic tilted fish $29.84. eBay sold (about Jun 26-Sep 22): "fish shaped cat bowl" 7 exact hits mostly ceramic $7-$32 (incl. HING Fish Bowl 185123028554, $30.95 + $8.62 ship); "...slow feeder" 2 exact hits, silicone $7-$8; 5+ ceramic fish-bone tilted feeders $10-$22. No printed items sold.
+
+**Original product.** Could not identify. Fred is closest (no eye/smile/two compartments); HING has the fish shape but no skeleton. Caution, not legal advice: fishbone-in-fish is credited design work at Fred and the photo is probably a branded product, so copying its silhouette or skeleton carries design-patent/trade-dress risk (INFERRED).
+
+**Crowding / price.** Generic fish bowls roughly $6-$22 landed (silicone/molded). Rigid skeleton feeders: one retail brand at about $14-$15 plus one STL. Printed cat bowls on Etsy $14-$30 + $6-$15 shipping. INFERRED: a printed version would sit around $24-$32, capped by Fred at about $15 unless an eye/two-compartment layout justifies a premium.
+
+**Flags.** (a) Food contact: layer lines can hold residue, PLA softens in hot water (INFERRED); sellers say "all PLA so it is food-safe", "certified food-grade PETG", "food-safe* filament", mostly hand-wash only. These are filament-level marketing claims, not certification of the printed part. (b) Printability: Fred-size (about 193 x 112 mm) fits a 256 mm bed; shallow skeleton and low walls likely need no supports (INFERRED); a contrasting eye would need multicolor.
+
+**Not verified.** Photo's exact brand; Etsy review counts; Amazon (fetch errors); Walmart (human-check page, stopped); whether Fred comes in green; sold data beyond eBay's roughly 90-day window.

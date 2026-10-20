@@ -14,3 +14,8 @@ Thumbs.db
 *.blend1
 halloween-cats/blender/versions/
 scratchpad/
+
+# Local backups and per-machine settings
+*.bak
+*.bak-*
+.claude/settings.local.json

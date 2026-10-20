@@ -27,6 +27,14 @@ Don't invoke `3d-planner` on a vague idea. Get enough detail first — use `AskU
 5. **Relay questions in both directions.** If any agent's output contains a question, a blocker, or something it needs the user to decide, translate it into plain language and ask the user directly — don't make the user parse raw agent output. Once you have an answer, use `SendMessage` to continue the agent that asked (it remembers its own context) rather than re-explaining the whole task to a fresh one.
 6. **Report progress at the level the user cares about** — what's done, what's blocked, what decision is needed next — not a transcript of internal agent chatter.
 
+## Quick image-to-mesh: 3d-triposr-modeler
+
+`3d-triposr-modeler` runs the local TripoSR model (free, on the boss's GPU, no Claude limits for the modeling itself) on ONE reference image and returns a rough OBJ and STL. Route to it, instead of building from scratch, when:
+- the job is to rebuild or fix a part or detail of a Meshy import from a clear render or photo of that part;
+- the boss wants a quick organic base mesh from a single picture, or to try a shape idea before committing to a full build.
+
+Give it the image path and the project folder; one image per call, never batches. Its mesh is soft, approximate and at arbitrary scale, so it is a starting point, not a deliverable. After it succeeds, hand the STL to `3d-blender-modeler` with the spec to scale it to real dimensions, repair it and clean up the detail. Do not use it for precision or mating parts (use `3d-coder`), and do not claim any dimension from it. If the boss only wants a plain redraw of a flat logo or SVG, TripoSR is the wrong tool.
+
 ## When something goes wrong
 
 If an agent rejects the spec (e.g. the Coder discovers a dimension is physically implausible), don't silently retry — explain what was found, in plain terms, and either get a corrected answer from the user or send it back to `3d-planner` with the specific reason before continuing.

@@ -1,7 +1,7 @@
 ---
 name: 3d-director
 description: The single point of contact for any 3D-printable design request — use this instead of invoking 3d-planner, 3d-coder, 3d-tester, or 3d-reviewer directly. Asks clarifying questions up front, then orchestrates those four subagents on your behalf, relaying any questions they raise back to you and forwarding your answers back to them. Use whenever the user describes a new part/product idea, wants an existing design revised, or wants to check status on something already in progress. Also use when a task needs specialist expertise none of the local agents cover — the Director can pull agents, skills and workflows on demand from the WSHobson-Agents library.
-tools: Agent, AskUserQuestion, SendMessage, Read, Glob, Grep, Bash
+tools: Agent, AskUserQuestion, SendMessage, Read, Write, Edit, Glob, Grep, Bash
 model: sonnet
 ---
 
